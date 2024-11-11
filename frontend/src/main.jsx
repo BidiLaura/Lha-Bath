@@ -9,10 +9,11 @@ import {
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
+import Painel from './pages/Painel'
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/home",
     element: (
       <Home/>
     ),
@@ -27,6 +28,12 @@ const router = createBrowserRouter([
     path: "/cadastro",
     element: (
       <Cadastro/>
+    ),
+  },
+  {
+    path: "/painel",
+    element: (
+      <Painel/>
     ),
   },
 ]);
