@@ -20,10 +20,8 @@ export default function Cadastro() {
                     <input type="text" />
                     <h5>Confirmar Senha:</h5>
                     <input type="text" />
-                    <button>Cadastrar</button>
-                    <li><Link to={'/login'}>Já tem cadastro? Entre aqui!</Link></li>
-                    <br /><br />
-                    
+                    <button><Link to={'/login'}>Cadastrar</Link></button>
+                    <li><Link to={'/login'}>Já tem cadastro? Entre aqui!</Link></li>                    
                 </div>
             </div>
         </>

@@ -7,8 +7,8 @@
 }
 
 .nav {
-    color: #000000;
-    height: 70px;
+    color: #ffffff;
+    height: 110px;
     width: 100%;
     background-color: #2C8D7C;
 }
@@ -25,13 +25,13 @@ ul {
 }
 
 a:hover {
-    color: #ffffff;
+    color: #000000;
     transition: all 200ms linear;
 }
 
 a {
     text-decoration: none;
-    color: #000000;
+    color: #ffffff;
 }
 
 .card {
@@ -46,31 +46,92 @@ a {
 
 .card>div {
     background-color: #2C8D7C;
-    color: #090909;
+    color: #ffffff;
     width: 350px;
     height: auto;
     padding: 2rem;
     border-radius: 10px;
 }
 
-input{
+input {
     border-radius: 5px;
-    border-style:none;
+    border-style: none;
     margin: 10px;
     padding: 5px;
 }
 
-button{
+button {
     background-color: #b7e9df;
-    width: 90px;
+    width: 100px;
     border-style: none;
     border-radius: 5px;
     font-size: 14px;
-    margin: 15px;
+    margin: 30px;
     margin-bottom: 20px;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0e453b; 
+    color: #ffffff; 
+}
+title {
+    text-align:start;
 
 }
 
-.title{
+button a {
+    text-decoration: none;  
+    color: #000000;
+}
+
+button:hover {
+    background-color: #0e453b;
+    color: #ffffff; 
+}
+
+/* Quando o link dentro do botão for hover, ele também vai ter cor branca */
+button a:hover {
+    color: #ffffff;
+}
+
+img {
+    width: 50%;
+    max-height: 500px;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeIn 1s ease-out; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
+}
+
+img:hover {
+    transform: scale(1.1); 
+
+}
+
+/* Definindo a animação */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px); /* Começa deslocado para cima */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* Termina na posição original */
+    }
+}
+
+.title-home {
+    text-align: center;
+    padding: 40px;
+    animation: fadeIn 1s ease-out; /* Aplica a animação */
+}
+
+.home{
+    align-items: center;
+    justify-content: center;
     text-align: center;
 }

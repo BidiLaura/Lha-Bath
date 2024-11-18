@@ -5,6 +5,7 @@ export default function Login() {
     return (
         <>
             <NavBar />
+            <div className="login">
             <div class="card">
                 <div>
                     <h1 className="title">Login</h1>
@@ -12,12 +13,12 @@ export default function Login() {
                     <input type="text" />
                     <h5>Senha:</h5>
                     <input type="text" />
-                    <button>Entrar</button>
+                    <button><Link to={'/painel'}>Entrar</Link></button>
                     <li><Link to={'/cadastro'}>Não tem cadastro? Faça ele aqui!</Link></li>
-                    <br /><br />
-                    
                 </div>
             </div>
+            <img src="../assets/bolhas.jpg" alt="" />
+            </div>        
         </>
     )
 }

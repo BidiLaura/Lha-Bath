@@ -10,10 +10,11 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Painel from './pages/Painel'
+import Usuario from './pages/Usuario'
 
 const router = createBrowserRouter([
   {
-    path: "/home",
+    path: "/Home",
     element: (
       <Home/>
     ),
@@ -34,6 +35,12 @@ const router = createBrowserRouter([
     path: "/painel",
     element: (
       <Painel/>
+    ),
+  },
+  {
+    path: "/usuario",
+    element: (
+      <Usuario/>
     ),
   },
 ]);
