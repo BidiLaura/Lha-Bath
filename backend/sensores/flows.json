@@ -1,0 +1,85 @@
+[
+    {
+        "id": "727502332294abfd",
+        "type": "tab",
+        "label": "Flow Arduino",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7daf30914ceb2c11",
+        "type": "serial in",
+        "z": "727502332294abfd",
+        "name": "Arduino Serial Input",
+        "serial": "42ef55fbc6afc594",
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "8648ddda0870ca6d"
+            ]
+        ]
+    },
+    {
+        "id": "8648ddda0870ca6d",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Parse Counter Value",
+        "func": "var contador = parseInt(msg.payload);\nif (!isNaN(contador)) {\n    msg.payload = [contador];\n    msg.topic = 'INSERT INTO contador (numeros) VALUES (?);';\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 200,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "ce9c9c02afb85ae5",
+        "type": "mysql",
+        "z": "727502332294abfd",
+        "mydb": "b2cc26c765796125",
+        "name": "arduinoContadort",
+        "x": 510,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "42ef55fbc6afc594",
+        "type": "serial-port",
+        "name": "",
+        "serialport": "COM6",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "b2cc26c765796125",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "127.0.0.1",
+        "port": "3307",
+        "db": "testeArduino",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]
