@@ -40,7 +40,8 @@ CREATE TABLE Estoque (
 CREATE TABLE Sensor_humi_temp (
     ID_HTSen INT AUTO_INCREMENT PRIMARY KEY,
     Local VARCHAR(30),
-    Resultado_Atual DECIMAL(5, 2),
+    Resultado_Humi DECIMAL(5, 2),
+    Resultado_Temp DECIMAL(5, 2),
     Historico_Dia DECIMAL(5, 2),
     Historico_Semana DECIMAL(5, 2),
     Historico_Mes DECIMAL(5, 2),
@@ -52,7 +53,7 @@ CREATE TABLE Sensor_humi_temp (
 CREATE TABLE SabaoSensor (
     ID_SabSen INT AUTO_INCREMENT PRIMARY KEY,
     Local VARCHAR(30),
-    Resultado_Atual DECIMAL(5, 2),
+    Resultado_Peso DECIMAL(5, 2),
     Historico_Dia DECIMAL(5, 2),
     Historico_Semana DECIMAL(5, 2),
     Historico_Mes DECIMAL(5, 2),
@@ -66,7 +67,7 @@ CREATE TABLE SabaoSensor (
 CREATE TABLE Sensor_lixeira (
     ID_LixSen INT AUTO_INCREMENT PRIMARY KEY,
     Local VARCHAR(30),
-    Resultado_Atual BOOL,
+    Resultado_Infraver BOOL,
     Historico_Dia DECIMAL(5, 2),
     Historico_Semana DECIMAL(5, 2),
     Historico_Mes DECIMAL(5, 2),
@@ -78,7 +79,7 @@ CREATE TABLE Sensor_lixeira (
 CREATE TABLE PapelSensor (
     ID_PapSen INT AUTO_INCREMENT PRIMARY KEY,
     Local VARCHAR(30),
-    Resultado_Atual DECIMAL(5, 2),
+    Resultado_Ultra DECIMAL(5, 2),
     Historico_Dia DECIMAL(5, 2),
     Historico_Semana DECIMAL(5, 2),
     Historico_Mes DECIMAL(5, 2),
