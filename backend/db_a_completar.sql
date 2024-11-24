@@ -35,7 +35,7 @@ CREATE TABLE Estoque (
     FOREIGN KEY (ID_Painel) REFERENCES Painel(ID_Painel) ON DELETE CASCADE
 );
 
---tabela sensores
+--  tabela sensores
 
 CREATE TABLE Sensor_humi_temp (
     ID_HTSen INT AUTO_INCREMENT PRIMARY KEY,
@@ -90,30 +90,30 @@ CREATE TABLE PapelSensor (
     FOREIGN KEY (ID_centra_estoquel) REFERENCES Estoque(ID_centra_estoquel) ON DELETE CASCADE
 );
 
---tabela de logs para armazenar as leituras
+--  tabela de logs para armazenar as leituras
 CREATE TABLE Sensor_Logs (
     ID_Log INT AUTO_INCREMENT PRIMARY KEY,
     ID_Sensor INT,
-    Tipo_Sensor VARCHAR(20), --distinguir tipos de sensores
+    Tipo_Sensor VARCHAR(20), --  distinguir tipos de sensores
     Resultado_Atual DECIMAL(5, 2),
     Data_Timestamp DATETIME,
-    FOREIGN KEY (ID_Sensor) REFERENCES Sensor_humi_temp(ID_HTSen) ON DELETE CASCADE -- Exemplo para o primeiro sensor
+    FOREIGN KEY (ID_Sensor) REFERENCES Sensor_humi_temp(ID_HTSen) ON DELETE CASCADE --  Exemplo para o primeiro sensor
 );
 
---melhorar consultas
+--  melhorar consultas
 CREATE INDEX idx_sensor_logs_sensor_id ON Sensor_Logs(ID_Sensor);
 CREATE INDEX idx_sensor_logs_timestamp ON Sensor_Logs(Data_Timestamp);
 
---Triggers
+--  Triggers
 
---dia
+--  dia
 DELIMITER $$
 
 CREATE TRIGGER update_daily_history
 AFTER INSERT ON Sensor_Logs
 FOR EACH ROW
 BEGIN
-    --Sensor_humi_temp
+    --  Sensor_humi_temp
     IF NEW.Tipo_Sensor = 'humi_temp' THEN
         UPDATE Sensor_humi_temp
         SET Historico_Dia = (
@@ -126,7 +126,7 @@ BEGIN
         WHERE ID_HTSen = NEW.ID_Sensor;
     END IF;
 
-    --SabaoSensor
+    --  SabaoSensor
     IF NEW.Tipo_Sensor = 'sabao' THEN
         UPDATE SabaoSensor
         SET Historico_Dia = (
@@ -139,7 +139,7 @@ BEGIN
         WHERE ID_SabSen = NEW.ID_Sensor;
     END IF;
 
-    --Sensor_lixeira
+    -- Sensor_lixeira
     IF NEW.Tipo_Sensor = 'lixeira' THEN
         UPDATE Sensor_lixeira
         SET Historico_Dia = (
@@ -152,7 +152,7 @@ BEGIN
         WHERE ID_LixSen = NEW.ID_Sensor;
     END IF;
 
-    --PapelSensor
+    -- PapelSensor
     IF NEW.Tipo_Sensor = 'papel' THEN
         UPDATE PapelSensor
         SET Historico_Dia = (
@@ -169,14 +169,14 @@ END $$
 
 DELIMITER ;
 
---semana
+-- semana
 DELIMITER $$
 
 CREATE TRIGGER update_weekly_history
 AFTER INSERT ON Sensor_Logs
 FOR EACH ROW
 BEGIN
-    --Sensor_humi_temp
+    -- Sensor_humi_temp
     IF NEW.Tipo_Sensor = 'humi_temp' THEN
         UPDATE Sensor_humi_temp
         SET Historico_Semana = (
@@ -189,7 +189,7 @@ BEGIN
         WHERE ID_HTSen = NEW.ID_Sensor;
     END IF;
 
-    --SabaoSensor
+    -- SabaoSensor
     IF NEW.Tipo_Sensor = 'sabao' THEN
         UPDATE SabaoSensor
         SET Historico_Semana = (
@@ -202,7 +202,7 @@ BEGIN
         WHERE ID_SabSen = NEW.ID_Sensor;
     END IF;
 
-    --Sensor_lixeira
+    -- Sensor_lixeira
     IF NEW.Tipo_Sensor = 'lixeira' THEN
         UPDATE Sensor_lixeira
         SET Historico_Semana = (
@@ -215,7 +215,7 @@ BEGIN
         WHERE ID_LixSen = NEW.ID_Sensor;
     END IF;
 
-    --PapelSensor
+    -- PapelSensor
     IF NEW.Tipo_Sensor = 'papel' THEN
         UPDATE PapelSensor
         SET Historico_Semana = (
@@ -232,14 +232,14 @@ END $$
 
 DELIMITER ;
 
---mes
+-- mes
 DELIMITER $$
 
 CREATE TRIGGER update_monthly_history
 AFTER INSERT ON Sensor_Logs
 FOR EACH ROW
 BEGIN
-    --Sensor_humi_temp
+    -- Sensor_humi_temp
     IF NEW.Tipo_Sensor = 'humi_temp' THEN
         UPDATE Sensor_humi_temp
         SET Historico_Mes = (
@@ -253,7 +253,7 @@ BEGIN
         WHERE ID_HTSen = NEW.ID_Sensor;
     END IF;
 
-    --SabaoSensor
+    -- SabaoSensor
     IF NEW.Tipo_Sensor = 'sabao' THEN
         UPDATE SabaoSensor
         SET Historico_Mes = (
@@ -267,7 +267,7 @@ BEGIN
         WHERE ID_SabSen = NEW.ID_Sensor;
     END IF;
 
-    --Sensor_lixeira
+    -- Sensor_lixeira
     IF NEW.Tipo_Sensor = 'lixeira' THEN
         UPDATE Sensor_lixeira
         SET Historico_Mes = (
@@ -281,7 +281,7 @@ BEGIN
         WHERE ID_LixSen = NEW.ID_Sensor;
     END IF;
 
-    --PapelSensor
+    -- PapelSensor
     IF NEW.Tipo_Sensor = 'papel' THEN
         UPDATE PapelSensor
         SET Historico_Mes = (
@@ -299,14 +299,14 @@ END $$
 
 DELIMITER ;
 
---ano
+-- ano
 DELIMITER $$
 
 CREATE TRIGGER update_yearly_history
 AFTER INSERT ON Sensor_Logs
 FOR EACH ROW
 BEGIN
-    --Sensor_humi_temp
+    -- Sensor_humi_temp
     IF NEW.Tipo_Sensor = 'humi_temp' THEN
         UPDATE Sensor_humi_temp
         SET Historico_Ano = (
@@ -319,7 +319,7 @@ BEGIN
         WHERE ID_HTSen = NEW.ID_Sensor;
     END IF;
 
-    --SabaoSensor
+    -- SabaoSensor
     IF NEW.Tipo_Sensor = 'sabao' THEN
         UPDATE SabaoSensor
         SET Historico_Ano = (
@@ -332,7 +332,7 @@ BEGIN
         WHERE ID_SabSen = NEW.ID_Sensor;
     END IF;
 
-    --Sensor_lixeira
+    -- Sensor_lixeira
     IF NEW.Tipo_Sensor = 'lixeira' THEN
         UPDATE Sensor_lixeira
         SET Historico_Ano = (
@@ -345,7 +345,7 @@ BEGIN
         WHERE ID_LixSen = NEW.ID_Sensor;
     END IF;
 
-    --PapelSensor
+    -- PapelSensor
     IF NEW.Tipo_Sensor = 'papel' THEN
         UPDATE PapelSensor
         SET Historico_Ano = (
