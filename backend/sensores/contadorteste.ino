@@ -1,4 +1,6 @@
 #include <Ultrasonic.h>
+#include <DHT.h>
+#include <ArduinoJson.h> // Biblioteca para trabalhar com JSON
 
 const int pinoDHT11 = A2;
 const int pinoTrigger = 5;
@@ -9,6 +11,8 @@ dht DHT;
 
 int contador = 0; 
 
+Ultrasonic ultrasonic(pinoTrigger, pinoEcho); // Configuração do sensor ultrassônico
+
 void setup() {
   Serial.begin(9600);
   pinMode(pinoInfra, INPUT);
@@ -16,27 +20,32 @@ void setup() {
 }
 
 void loop() {
-// sensor de umidade e temperatura
-DHT.read11(pinoDHT11); 
-Serial.print("Umidade: "); 
-Serial.print(DHT.humidity); 
-Serial.print("%"); 
-Serial.print(" / Temperatura: "); 
-Serial.print(DHT.temperature, 0); 
-Serial.println("*C");
-//sensor ultrassonico
-float cmMsec, inMsec;
-long microsec = ultrasonic.timing();
-cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM);
-Serial.print("Distancia em cm: ");
-Serial.print(cmMsec);
-// sensor infra
-int leitura;
-int contador = 0;
-leitura = digitalRead(pinosensor);
-if (leitura != 1){
-contador += 1;
-}
+  // Sensor de umidade e temperatura
+  DHT.read11(pinoDHT11); 
+  float humi = DHT.humidity; // Umidade
+  float temp = DHT.temperature; // Temperatura
 
-Serial.println(contador);
+  // Sensor ultrassônico
+  long microsec = ultrasonic.timing();
+  float cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); // Distância em cm
+
+  // Sensor infravermelho
+  int leitura = digitalRead(pinoInfra);
+  if (leitura != 1) {
+    contador += 1;
+  }
+
+  // Criação do objeto JSON
+  StaticJsonDocument<200> doc;  // Tamanho do documento JSON, ajuste conforme necessário
+  doc["humi"] = humi;
+  doc["temp"] = temp;
+  doc["contador"] = contador;
+  doc["cmMsec"] = cmMsec;
+
+  // Serializando o JSON para enviar ao Node-RED
+  String output;
+  serializeJson(doc, output);
+  Serial.println(output); // Envia os dados para o serial (pode ser lido pelo Node-RED)
+
+  delay(2000); // Espera 2 segundos antes de ler novamente
 }
