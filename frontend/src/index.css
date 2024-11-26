@@ -73,22 +73,23 @@ button {
 }
 
 button:hover {
-    background-color: #0e453b; 
-    color: #ffffff; 
+    background-color: #0e453b;
+    color: #ffffff;
 }
+
 title {
-    text-align:start;
+    text-align: start;
 
 }
 
 button a {
-    text-decoration: none;  
+    text-decoration: none;
     color: #000000;
 }
 
 button:hover {
     background-color: #0e453b;
-    color: #ffffff; 
+    color: #ffffff;
 }
 
 /* Quando o link dentro do botão for hover, ele também vai ter cor branca */
@@ -103,12 +104,13 @@ img {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    animation: fadeIn 1s ease-out; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
+    animation: fadeIn 1s ease-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Transição suave */
 }
 
 img:hover {
-    transform: scale(1.1); 
+    transform: scale(1.1);
 
 }
 
@@ -116,63 +118,127 @@ img:hover {
 @keyframes fadeIn {
     0% {
         opacity: 0;
-        transform: translateY(-30px); /* Começa deslocado para cima */
+        transform: translateY(-30px);
+        /* Começa deslocado para cima */
     }
+
     100% {
         opacity: 1;
-        transform: translateY(0); /* Termina na posição original */
+        transform: translateY(0);
+        /* Termina na posição original */
     }
 }
 
 .title-home {
     text-align: center;
     padding: 40px;
-    animation: fadeIn 1s ease-out; /* Aplica a animação */
+    animation: fadeIn 1s ease-out;
+    /* Aplica a animação */
 }
 
-.home{
+.home {
     align-items: center;
     justify-content: center;
     text-align: center;
 }
 
 /* componente abrefecha */
+/* Componente toggle-container */
 .toggle-container {
     margin: 20px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 300px;
     background-color: #f9f9f9;
-  }
-  
-  /* Botão de abrir/fechar */
-  .toggle-button {
-    background-color: #4CAF50; /* Cor verde */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-  }
-  
-  .toggle-button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Conteúdo que será mostrado ou escondido */
-  .toggle-content {
+}
+
+/* Ajustar o layout do toggle-container para horizontal */
+.toggle-section {
+    display: flex;
+    flex-direction: row;
+    /* Alinha os itens horizontalmente */
+    align-items: center;
+    /* Alinha verticalmente no centro */
+    gap: 20px;
+    /* Adiciona um espaçamento entre os itens */
+    justify-content: flex-start;
+    /* Garante que os itens fiquem alinhados à esquerda */
+}
+
+/* Alinha o conteúdo do toggle dentro de cada seção */
+.toggle-content {
     display: none;
+    /* Conteúdo oculto inicialmente */
     padding: 10px;
     margin-top: 10px;
     background-color: #f1f1f1;
     border-radius: 5px;
     border: 1px solid #ccc;
-  }
-  
-  .toggle-content.open {
-    display: block; /* Exibe a div quando a classe 'open' é adicionada */
-  }
+    width: 300px;
+    /* A largura da área de conteúdo */
+}
 
+/* Quando o conteúdo estiver aberto */
+.toggle-content.open {
+    display: block;
+}
+
+/* Estilização do botão de alternância */
+.toggle-button {
+    background-color: #2C8D7C;
+    /* Cor verde */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    /* Adiciona um pequeno espaçamento à esquerda do botão */
+}
+
+.toggle-button:hover {
+    background-color: #b7e9df;
+    color: #000000;
+}
+
+/* Sub-seções dentro do toggle (como Papel e Lixo) */
+.toggle-subsection {
+    display: flex;
+    flex-direction: column;
+    /* Para manter as subseções em formato de coluna */
+    padding: 15px;
+    width: 250px;
+    /* Largura para subseções, para dar um pouco de espaço */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+/* Títulos dentro da subseção */
+.toggle-subsection h3 {
+    font-size: 18px;
+    color: #2C8D7C;
+    margin-bottom: 10px;
+}
+
+/* Parágrafos dentro da subseção */
+.toggle-subsection p {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsividade: em telas menores, alinha as seções verticalmente */
+@media (max-width: 768px) {
+    .toggle-section {
+        flex-direction: column;
+        /* Coloca os itens em coluna no celular */
+    }
+    
+}

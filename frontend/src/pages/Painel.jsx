@@ -6,7 +6,6 @@ export default function Painel() {
     return (
         <>
             <NavBarPainel/>
-            <h1>testessss</h1>
             <ToggleDiv />
         </>
     )

@@ -1,7 +1,5 @@
 import NavBar from "../components/NavBar"
 import { Link } from 'react-router-dom'
-import axios from 'axios'
-
 
 export default function Cadastro() {
     return (
