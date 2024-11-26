@@ -95,6 +95,21 @@ app.get('/', (req, res) => {
     );
 });
 
+app.get('/Clima', (req, res) => {
+    const { Local, Resultado_Humi } = req.body;
+    banco.query(
+        `SELECT * FROM Sensor_humi_temp`,
+        function (err, results, fields) {
+            if (err) {
+                console.error('Erro na consulta:', err);
+                return res.status(500).json({ error: 'Erro ao consultar veículos' });
+            }
+            // Retorna os resultados como um objeto JSON
+            return res.json(results);
+        }
+    );
+});
+
 app.listen(port, () => {
     console.log(`Ta funfando na porta ${port} ;)`);
 });

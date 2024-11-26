@@ -30,7 +30,7 @@ export default function Login() {
         <>
             <NavBar />
             <div className="login">
-            <div class="card">
+            <div className="card">
                 <div>
                     <h1 className="title">Login</h1>
                     <h5>Nome de usuário:</h5>

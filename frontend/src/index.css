@@ -135,3 +135,44 @@ img:hover {
     justify-content: center;
     text-align: center;
 }
+
+/* componente abrefecha */
+.toggle-container {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 300px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Botão de abrir/fechar */
+  .toggle-button {
+    background-color: #4CAF50; /* Cor verde */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+  
+  .toggle-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Conteúdo que será mostrado ou escondido */
+  .toggle-content {
+    display: none;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .toggle-content.open {
+    display: block; /* Exibe a div quando a classe 'open' é adicionada */
+  }
+
