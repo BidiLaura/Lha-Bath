@@ -13,11 +13,12 @@
         "z": "727502332294abfd",
         "name": "Arduino Serial Input",
         "serial": "42ef55fbc6afc594",
-        "x": 150,
-        "y": 140,
+        "x": 90,
+        "y": 80,
         "wires": [
             [
-                "8648ddda0870ca6d"
+                "9da945583c746ca2",
+                "ae7333af2b08cebd"
             ]
         ]
     },
@@ -25,9 +26,10 @@
         "id": "8648ddda0870ca6d",
         "type": "function",
         "z": "727502332294abfd",
-        "name": "Parse Counter Value",
-        "func": "var contador = parseInt(msg.payload);\nif (!isNaN(contador)) {\n    msg.payload = [contador];\n    msg.topic = 'INSERT INTO contador (numeros) VALUES (?);';\n    return msg;\n}\nreturn null;",
+        "name": "Humidade e Temperatura",
+        "func": "// Receber dados do payload (humi e temp)\nvar humi = parseFloat(msg.payload.humi); // Umidade\nvar temp = parseFloat(msg.payload.temp); // Temperatura\n\n// Construir a consulta SQL para inserir os resultados\nmsg.topic = `\n    INSERT INTO Sensor_humi_temp (Resultado_Humi, Resultado_Temp) \n    VALUES (?, ?);\n`;\nmsg.payload = [humi, temp]; // Passar os valores para a consulta\n\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -51,6 +53,102 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "76c0beb51d4a772f",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Lixeira",
+        "func": "// Receber o valor de \"contador\" do payload\nvar contador = parseInt(msg.payload.contador); // Convertendo para número inteiro\n\n// Interpretar o valor do contador como true ou false para Resultado_Infraver\n// Exemplo: se contador > 0, significa que há detecção (true), caso contrário false\nvar infraver = contador > 0;\n\n// Construir a consulta SQL para inserir o resultado\nmsg.topic = `\n    INSERT INTO Sensor_lixeira (Resultado_Infraver) \n    VALUES (?);\n`;\nmsg.payload = [infraver]; // Passar o valor booleano para a consulta\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 240,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "35226b44417b7c25",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Sabao",
+        "func": "// Receber o valor de \"kg\" do payload\nvar kg = parseFloat(msg.payload.kg); // Convertendo para número decimal\n\n// Construir a consulta SQL para inserir o resultado\nmsg.topic = `\n    INSERT INTO SabaoSensor (Resultado_Peso) \n    VALUES (?);\n`;\nmsg.payload = [kg]; // Passar o valor para a consulta\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 280,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "a046237b423501d7",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Papel",
+        "func": "// Receber o valor de \"distance\" do payload\nvar distance = parseFloat(msg.payload.distance); // Convertendo para número decimal\n\n// Construir a consulta SQL para inserir o resultado\nmsg.topic = `\n    INSERT INTO PapelSensor (Resultado_Ultra) \n    VALUES (?);\n`;\nmsg.payload = [distance]; // Passar o valor para a consulta\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 320,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "9da945583c746ca2",
+        "type": "json",
+        "z": "727502332294abfd",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 110,
+        "y": 160,
+        "wires": [
+            [
+                "8648ddda0870ca6d",
+                "76c0beb51d4a772f",
+                "35226b44417b7c25",
+                "a046237b423501d7"
+            ]
+        ]
+    },
+    {
+        "id": "ae7333af2b08cebd",
+        "type": "debug",
+        "z": "727502332294abfd",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 60,
+        "wires": []
     },
     {
         "id": "42ef55fbc6afc594",
