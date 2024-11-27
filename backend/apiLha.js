@@ -1,6 +1,8 @@
-const express = require('express');
 const cors = require('cors');
+const express = require("express");
 const banco = require('./banco');
+const jwt = require("jsonwebtoken")
+
 const app = express();
 app.use(express.json());
 const port = 3000;
@@ -62,12 +64,11 @@ app.delete('/deletar/:id', (req, res) => {
 });
 
 // selecionar por ID
-app.post('/Login', (req, res) => {
-    const { Login, Senha } = req.body;
-    console.log(Login, Senha)
+app.post('/login', (req, res) => {
+    const { Email, Senha } = req.body;
     banco.query(
-        `SELECT * FROM User WHERE Login = ? AND Senha = ?`,
-        [Login, Senha],  // Passando os valores de Login e Senha corretamente
+        `SELECT * FROM User WHERE Email = ? AND Senha = ?`,
+        [Email, Senha],  // Passando os valores de Login e Senha corretamente
         (err, results) => {
             if (err) {
                 console.error('Erro na consulta por Login:', err);
@@ -76,7 +77,20 @@ app.post('/Login', (req, res) => {
             if (results.length === 0) {
                 return res.status(404).send('Usuário não encontrado.');
             }
-            return res.json(results[0]);
+
+            const secret = "auaumiau"
+
+            const token = jwt.sign(
+                {
+                    id:results[0].Senha
+                },
+                secret,
+                {
+                    expiresIn: '2 days'
+                }
+            );
+
+            return res.json({token: token});
         }
     );    
 });

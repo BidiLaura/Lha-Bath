@@ -5,25 +5,31 @@ import axios from 'axios'
 
 export default function Login() {
 
-    const [Login, setLogin] = useState("")
+    const [Email, setEmail] = useState("")
     const [Senha, setSenha] = useState("")
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        sessionStorage.removeItem("token")
+    })
+
     const userLogin = async () => {
         try {
-            console.log(Login, Senha); 
-            await axios.post('http://localhost:3000/login', {Login, Senha}
+            console.log(Email, Senha); 
+            const res = await axios.post('http://localhost:3000/login', {Email, Senha}
             );
+            console.log(res.data.token)
+            sessionStorage.setItem("token", res.data.token)
         } 
         catch (err) {
             console.log(err);
         }
     }
 
-    const handleLogin = () => {
-        userLogin()
-        navigate("/painel")
+    const handleLogin = async () => {
+        await userLogin()
+        navigate("/usuario")
     }
 
     return (
@@ -34,7 +40,7 @@ export default function Login() {
                 <div>
                     <h1 className="title">Login</h1>
                     <h5>Nome de usuário:</h5>
-                    <input type="text" onChange={(e) => setLogin(e.target.value)}/>
+                    <input type="text" onChange={(e) => setEmail(e.target.value)}/>
                     <h5>Senha:</h5>
                     <input type="text"  onChange={(e) => setSenha(e.target.value)}/>
                     <button onClick={handleLogin}>Entrar</button>

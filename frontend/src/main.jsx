@@ -5,6 +5,7 @@ import {
   RouterProvider,
   Route,
   Link,
+  Outlet,
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -12,16 +13,12 @@ import Cadastro from "./pages/Cadastro";
 import Painel from './pages/Painel'
 import Usuario from './pages/Usuario'
 import List from './pages/List'
+import ProtectedRoute from "./pages/ProtectedRoute";
+import AcessDenied from "./pages/AccessDenied";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Home/>
-    ),
-  },
-  {
-    path: "/Home",
     element: (
       <Home/>
     ),
@@ -39,22 +36,16 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/painel",
-    element: (
-      <Painel/>
-    ),
-  },
-  {
     path: "/usuario",
     element: (
-      <Usuario/>
+      <ProtectedRoute errorPage={<AcessDenied />} targetPage={<Outlet />}/>
     ),
-  },
-  {
-    path: "/get",
-    element: (
-      <List/>
-    ),
+    children: [
+      {
+        path: "",
+        element: <Painel/>
+      }
+    ]
   },
 ]);
 
