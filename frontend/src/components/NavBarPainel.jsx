@@ -6,7 +6,7 @@ export default function NavBarPainel() {
     return (
         <Navbar className="navbar">
         <Nav className="nav">
-            <h1 className="title">Lha - Bath</h1>
+            <h1 className="title">LhaBath</h1>
             <ul>
                 <li><Link to={'/home'}>Home</Link></li>
                 <li><Link to={'/usuario'}>Usuário</Link></li>
