@@ -4,8 +4,7 @@
         "type": "tab",
         "label": "Flow Arduino",
         "disabled": false,
-        "info": "",
-        "env": []
+        "info": ""
     },
     {
         "id": "7daf30914ceb2c11",
@@ -23,98 +22,6 @@
         ]
     },
     {
-        "id": "8648ddda0870ca6d",
-        "type": "function",
-        "z": "727502332294abfd",
-        "name": "Humidade e Temperatura",
-        "func": "// Receber dados do payload (humi e temp)\nvar humi = parseFloat(msg.payload.humi); // Umidade\nvar temp = parseFloat(msg.payload.temp); // Temperatura\n\n// Construir a consulta SQL para inserir os resultados\nmsg.topic = `\n    INSERT INTO Sensor_humi_temp (Resultado_Humi, Resultado_Temp) \n    VALUES (?, ?);\n`;\nmsg.payload = [humi, temp]; // Passar os valores para a consulta\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 330,
-        "y": 200,
-        "wires": [
-            [
-                "ce9c9c02afb85ae5"
-            ]
-        ]
-    },
-    {
-        "id": "ce9c9c02afb85ae5",
-        "type": "mysql",
-        "z": "727502332294abfd",
-        "mydb": "b2cc26c765796125",
-        "name": "arduinoContadort",
-        "x": 510,
-        "y": 140,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "76c0beb51d4a772f",
-        "type": "function",
-        "z": "727502332294abfd",
-        "name": "Lixeira",
-        "func": "// Receber o valor de \"contador\" do payload\nvar contador = parseInt(msg.payload.contador); // Convertendo para número inteiro\n\n// Interpretar o valor do contador como true ou false para Resultado_Infraver\n// Exemplo: se contador > 0, significa que há detecção (true), caso contrário false\nvar infraver = contador > 0;\n\n// Construir a consulta SQL para inserir o resultado\nmsg.topic = `\n    INSERT INTO Sensor_lixeira (Resultado_Infraver) \n    VALUES (?);\n`;\nmsg.payload = [infraver]; // Passar o valor booleano para a consulta\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 270,
-        "y": 240,
-        "wires": [
-            [
-                "ce9c9c02afb85ae5"
-            ]
-        ]
-    },
-    {
-        "id": "35226b44417b7c25",
-        "type": "function",
-        "z": "727502332294abfd",
-        "name": "Sabao",
-        "func": "// Receber o valor de \"kg\" do payload\nvar kg = parseFloat(msg.payload.kg); // Convertendo para número decimal\n\n// Construir a consulta SQL para inserir o resultado\nmsg.topic = `\n    INSERT INTO SabaoSensor (Resultado_Peso) \n    VALUES (?);\n`;\nmsg.payload = [kg]; // Passar o valor para a consulta\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 270,
-        "y": 280,
-        "wires": [
-            [
-                "ce9c9c02afb85ae5"
-            ]
-        ]
-    },
-    {
-        "id": "a046237b423501d7",
-        "type": "function",
-        "z": "727502332294abfd",
-        "name": "Papel",
-        "func": "// Receber o valor de \"distance\" do payload\nvar distance = parseFloat(msg.payload.distance); // Convertendo para número decimal\n\n// Construir a consulta SQL para inserir o resultado\nmsg.topic = `\n    INSERT INTO PapelSensor (Resultado_Ultra) \n    VALUES (?);\n`;\nmsg.payload = [distance]; // Passar o valor para a consulta\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 270,
-        "y": 320,
-        "wires": [
-            [
-                "ce9c9c02afb85ae5"
-            ]
-        ]
-    },
-    {
         "id": "9da945583c746ca2",
         "type": "json",
         "z": "727502332294abfd",
@@ -126,26 +33,92 @@
         "y": 160,
         "wires": [
             [
-                "8648ddda0870ca6d",
-                "76c0beb51d4a772f",
-                "35226b44417b7c25",
-                "a046237b423501d7"
+                "0ad28530b36f01d2",
+                "6bfb2baf88e5e921",
+                "76c0beb51d4a772f"
             ]
+        ]
+    },
+    {
+        "id": "0ad28530b36f01d2",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "HumiTemp",
+        "func": "// Processar humidade e temperatura\nvar humidity = msg.payload.HumiTemp.Humidity;\nvar temperature = msg.payload.HumiTemp.Temperature;\n\nmsg.topic = `INSERT INTO Sensor (Tipo_Sensor, Local, Resultado_Atual) VALUES ('HumiTemp', 'Banheiro 1', ?);`;\nmsg.payload = [humidity];\n\nreturn [msg];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 200,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "6bfb2baf88e5e921",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Papel",
+        "func": "// Processar distância (papel)\nvar distance = msg.payload.Papel.Distance;\n\nmsg.topic = `INSERT INTO Sensor (Tipo_Sensor, Local, Resultado_Atual) VALUES ('Papel', 'Banheiro 1', ?);`;\nmsg.payload = [distance];\n\nreturn [msg];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 240,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "76c0beb51d4a772f",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Lixeira",
+        "func": "// Processar contador (lixeira)\nvar contador = msg.payload.Lixeira.Contador;\n\nmsg.topic = `INSERT INTO Sensor (Tipo_Sensor, Local, Resultado_Atual) VALUES ('Lixeira', 'Banheiro 1', ?);`;\nmsg.payload = [contador];\n\nreturn [msg];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 280,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "ce9c9c02afb85ae5",
+        "type": "mysql",
+        "z": "727502332294abfd",
+        "mydb": "b2cc26c765796125",
+        "name": "Inserir no Banco de Dados",
+        "x": 520,
+        "y": 200,
+        "wires": [
+            []
         ]
     },
     {
         "id": "ae7333af2b08cebd",
         "type": "debug",
         "z": "727502332294abfd",
-        "name": "debug 1",
+        "name": "Debug Raw Payload",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "payload",
         "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
         "x": 320,
         "y": 60,
         "wires": []
@@ -153,17 +126,11 @@
     {
         "id": "42ef55fbc6afc594",
         "type": "serial-port",
-        "name": "",
         "serialport": "COM6",
         "serialbaud": "9600",
         "databits": "8",
         "parity": "none",
         "stopbits": "1",
-        "waitfor": "",
-        "dtr": "none",
-        "rts": "none",
-        "cts": "none",
-        "dsr": "none",
         "newline": "\\n",
         "bin": "false",
         "out": "char",
@@ -173,7 +140,7 @@
     {
         "id": "b2cc26c765796125",
         "type": "MySQLdatabase",
-        "name": "",
+        "name": "DB Connection",
         "host": "127.0.0.1",
         "port": "3307",
         "db": "testeArduino",

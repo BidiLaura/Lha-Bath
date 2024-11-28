@@ -1,27 +1,11 @@
-import { useEffect, useState } from "react";
-import { jwtDecode } from 'jwt-decode';
-export default function ProtectedRoute({ errorPage, targetPage }) {
-    const [page, setPage] = useState(<></>);
-    function renderPage() {
-        const token = sessionStorage.getItem('token');
+import { Navigate } from 'react-router-dom';
 
-        console.log(token)
+export default function ProtectedRoute({ targetPage, errorPage }) {
+    const token = sessionStorage.getItem("token"); 
 
-        if (!token) {
-            setPage(errorPage)
-            return
-        }
-
-        const decodeToken = jwtDecode(token)
-        const { exp } = decodeToken;
-        if (exp + '000' - Date.now() < 0) {
-            setPage(errorPage)
-            return
-        }
-        setPage(targetPage)
+    if (!token) {
+        return errorPage || <Navigate to="/login" replace />; 
     }
-    useEffect(() => {
-        renderPage()
-    }, [])
-    return page;
+
+    return targetPage; 
 }

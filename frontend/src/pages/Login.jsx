@@ -1,53 +1,79 @@
-import { useEffect, useState } from "react"
-import NavBar from "../components/NavBar"
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState, useRef } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Alterado de useHistory para useNavigate
+import NavBar from "../components/NavBar"; // Presumo que você tenha esse componente NavBar
 
-export default function Login() {
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Usado para redirecionar após o login
+  const loginContainerRef = useRef(null); // Referência para a caixa de login
 
-    const [Email, setEmail] = useState("")
-    const [Senha, setSenha] = useState("")
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    const navigate = useNavigate();
+    try {
+      const response = await axios.post("http://localhost:3000/login", { Email: email, Senha: senha });
+      const { token, user } = response.data;
 
-    useEffect(() => {
-        sessionStorage.removeItem("token")
-    })
+      // Armazenar o token e dados do usuário no localStorage
+      localStorage.setItem("token", token); // Armazena o token JWT
+      localStorage.setItem("user", JSON.stringify(user)); // Armazena os dados do usuário
 
-    const userLogin = async () => {
-        try {
-            console.log(Email, Senha); 
-            const res = await axios.post('http://localhost:3000/login', {Email, Senha}
-            );
-            console.log(res.data.token)
-            sessionStorage.setItem("token", res.data.token)
-        } 
-        catch (err) {
-            console.log(err);
-        }
+      // Redireciona para a página de painel após o login
+      navigate("/usuario/painel"); // Redireciona com useNavigate
+    } catch (error) {
+      setError("Usuário ou senha inválidos.");
     }
+  };
 
-    const handleLogin = async () => {
-        await userLogin()
-        navigate("/usuario")
+  const handleClickOutside = (e) => {
+    // Verifica se o clique foi fora da caixa de login
+    if (loginContainerRef.current && !loginContainerRef.current.contains(e.target)) {
+      navigate("/"); // Redireciona para a página inicial
     }
+  };
 
-    return (
-        <>
-            <NavBar />
-            <div className="login">
-            <div className="card">
-                <div>
-                    <h1 className="title">Login</h1>
-                    <h5>Nome de usuário:</h5>
-                    <input type="text" onChange={(e) => setEmail(e.target.value)}/>
-                    <h5>Senha:</h5>
-                    <input type="text"  onChange={(e) => setSenha(e.target.value)}/>
-                    <button onClick={handleLogin}>Entrar</button>
-                    <li><Link to={'/cadastro'}>Não tem cadastro? Faça ele aqui!</Link></li>
-                </div>
-            </div>
-            </div>        
-        </>
-    )
-}
+  // Adiciona o evento de clique no document quando o componente for montado
+  React.useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <>
+      <NavBar />
+      <div className="login-overlay active"> {/* Caixa de login com fundo desfocado */}
+        <div className="login-container active" ref={loginContainerRef}>
+          <h1 className="title">Login</h1>
+          {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>} {/* Mensagem de erro */}
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+            />
+            <button type="submit">Login</button>
+          </form>
+          <div>
+            <p>Não tem conta? <a href="/cadastro">Cadastre-se aqui</a></p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Login;
