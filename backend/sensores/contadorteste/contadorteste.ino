@@ -46,24 +46,23 @@ void loop() {
   StaticJsonDocument<300> jsonDoc;
 
   // Dados de humidade e temperatura
-  if (!isnan(humidity) && !isnan(temperature)) {
-    JsonObject humiTemp = jsonDoc.createNestedObject("HumiTemp");
-    humiTemp["Tipo_Sensor"] = "HumiTemp";
-    humiTemp["Humidity"] = humidity;
-    humiTemp["Temperature"] = temperature;
-  } else {
-    jsonDoc["HumiTemp"] = "Erro na leitura do sensor";
-  }
+  JsonObject humidade = jsonDoc.createNestedObject("Humidade");
+  humidade["humidity"] = humidity;  // Corrigido para usar o nome correto
+  humidade["Tipo_Sensor"] = "Humidade";
+
+  JsonObject Temperatura = jsonDoc.createNestedObject("Temperatura");
+  Temperatura["temperature"] = temperature;  // Corrigido para usar o nome correto
+  Temperatura["Tipo_Sensor"] = "Temperatura";
 
   // Dados de distância (papel)
   JsonObject papel = jsonDoc.createNestedObject("Papel");
-  papel["Tipo_Sensor"] = "Papel";
   papel["Distance"] = distance;
+  papel["Tipo_Sensor"] = "Papel";
 
   // Dados do contador (lixeira)
   JsonObject lixeira = jsonDoc.createNestedObject("Lixeira");
-  lixeira["Tipo_Sensor"] = "Lixeira";
   lixeira["Contador"] = contador;
+  lixeira["Tipo_Sensor"] = "Lixeira";
 
   // Serializa o objeto JSON e envia via Serial
   serializeJson(jsonDoc, Serial);

@@ -1,3 +1,5 @@
+DROP DATABASE Lhabath;
+
 CREATE DATABASE Lhabath;
 
 USE Lhabath;
@@ -15,7 +17,7 @@ CREATE TABLE Painel (
 CREATE TABLE User (
     ID_User INT AUTO_INCREMENT PRIMARY KEY,
     CNPJ VARCHAR(14) NOT NULL,
-    Login VARCHAR(20) NOT NULL,
+    Telefone VARCHAR(20) NOT NULL,
     Email VARCHAR(40) NOT NULL,
     Senha VARCHAR(255) NOT NULL,
     Nome VARCHAR(70) NOT NULL,
@@ -44,12 +46,28 @@ CREATE TABLE Banheiro (
 -- Tabela de Sensores Genéricos
 CREATE TABLE Sensor (
     ID_Sensor INT AUTO_INCREMENT PRIMARY KEY,
-    Tipo_Sensor ENUM('HumiTemp', 'Sabao', 'Lixeira', 'Papel') NOT NULL,
+    Tipo_Sensor ENUM('Humidade','Temperatura', 'Sabao', 'Lixeira', 'Papel') NOT NULL,
     Local VARCHAR(30),
     Resultado_Atual DECIMAL(5, 2),
     ID_Banheiro INT,
     FOREIGN KEY (ID_Banheiro) REFERENCES Banheiro(ID_Banheiro) ON DELETE CASCADE
 );
+
+-- Inserir dados de Humidade com ID 1
+INSERT INTO Sensor (ID_Sensor, Tipo_Sensor)
+VALUES (1, 'Humidade');
+
+-- Inserir dados de Temperatura com ID 2
+INSERT INTO Sensor (ID_Sensor, Tipo_Sensor)
+VALUES (2, 'Temperatura');
+
+-- Inserir dados de Distância (Papel) com ID 3
+INSERT INTO Sensor (ID_Sensor, Tipo_Sensor)
+VALUES (3, 'Papel');
+
+-- Inserir dados de Lixeira com ID 4
+INSERT INTO Sensor (ID_Sensor, Tipo_Sensor)
+VALUES (4, 'Lixeira');
 
 -- Tabela de Históricos de Sensores
 CREATE TABLE Sensor_Historico (
@@ -74,113 +92,7 @@ CREATE TABLE Sensor_Logs (
 
 -- Listar Sensores em um Banheiro
 
-SELECT S.Tipo_Sensor, S.Local, S.Resultado_Atual
-FROM Sensor S
-JOIN Banheiro B ON S.ID_Banheiro = B.ID_Banheiro
-WHERE B.Nome = 'Banheiro 1';
+SELECT * FROM Sensor;
 
--- Inserir Histórico para um Sensor
-INSERT INTO Sensor_Historico (ID_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-VALUES (1, 'Dia', 23.5, NOW());
+SELECT * FROM User;
 
--- Listar Usuários e Seus Painéis
-SELECT U.Nome, P.Secao_localidade, P.Notificacao
-FROM User U
-JOIN Painel P ON U.ID_Painel = P.ID_Painel;
-
--- Estoque de um Painel
-SELECT E.Estoque_Papel, E.Estoque_Sabao
-FROM Estoque E
-JOIN Painel P ON E.ID_Painel = P.ID_Painel
-WHERE P.ID_Painel = 1;
-
--- Triggers
-
--- Diario
-DELIMITER $$
-
-CREATE TRIGGER update_daily_history
-AFTER INSERT ON Sensor_Logs
-FOR EACH ROW
-BEGIN
-    INSERT INTO Sensor_Historico (ID_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (
-        NEW.ID_Sensor,
-        'Dia',
-        (SELECT AVG(Resultado_Atual)
-         FROM Sensor_Logs
-         WHERE ID_Sensor = NEW.ID_Sensor
-         AND DATE(Data_Timestamp) = CURDATE()),
-        NOW()
-    )
-    ON DUPLICATE KEY UPDATE Resultado = VALUES(Resultado), Data_Timestamp = VALUES(Data_Timestamp);
-END $$
-
-DELIMITER ;
-
--- Semanal
-DELIMITER $$
-
-CREATE TRIGGER update_weekly_history
-AFTER INSERT ON Sensor_Logs
-FOR EACH ROW
-BEGIN
-    INSERT INTO Sensor_Historico (ID_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (
-        NEW.ID_Sensor,
-        'Semana',
-        (SELECT AVG(Resultado_Atual)
-         FROM Sensor_Logs
-         WHERE ID_Sensor = NEW.ID_Sensor
-         AND YEARWEEK(Data_Timestamp, 1) = YEARWEEK(CURDATE(), 1)),
-        NOW()
-    )
-    ON DUPLICATE KEY UPDATE Resultado = VALUES(Resultado), Data_Timestamp = VALUES(Data_Timestamp;
-END $$
-
-DELIMITER ;
-
--- Mensal
-DELIMITER $$
-
-CREATE TRIGGER update_monthly_history
-AFTER INSERT ON Sensor_Logs
-FOR EACH ROW
-BEGIN
-    INSERT INTO Sensor_Historico (ID_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (
-        NEW.ID_Sensor,
-        'Mes',
-        (SELECT AVG(Resultado_Atual)
-         FROM Sensor_Logs
-         WHERE ID_Sensor = NEW.ID_Sensor
-         AND YEAR(Data_Timestamp) = YEAR(CURDATE())
-         AND MONTH(Data_Timestamp) = MONTH(CURDATE())),
-        NOW()
-    )
-    ON DUPLICATE KEY UPDATE Resultado = VALUES(Resultado), Data_Timestamp = VALUES(Data_Timestamp);
-END $$
-
-DELIMITER ;
-
--- Anual
-DELIMITER $$
-
-CREATE TRIGGER update_yearly_history
-AFTER INSERT ON Sensor_Logs
-FOR EACH ROW
-BEGIN
-    INSERT INTO Sensor_Historico (ID_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (
-        NEW.ID_Sensor,
-        'Ano',
-        (SELECT AVG(Resultado_Atual)
-         FROM Sensor_Logs
-         WHERE ID_Sensor = NEW.ID_Sensor
-         AND YEAR(Data_Timestamp) = YEAR(CURDATE())),
-        NOW()
-    )
-    ON DUPLICATE KEY UPDATE Resultado = VALUES(Resultado), Data_Timestamp = VALUES(Data_Timestamp);
-END $$
-
-DELIMITER ;

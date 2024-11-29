@@ -1,105 +1,46 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Usaremos axios para realizar requisições HTTP
+import axios from "axios";
+import Sensor from "./Sensor"; // Componente que exibirá os sensores
 
-import Cabine from "./Cabine"; // Importando o componente Cabine
-import Sensor from "./Sensor"; // Componente para representar o Sensor
+const BanheiroSensores = ({ id }) => {
+  const [sensores, setSensores] = useState([]); // Estado para armazenar os sensores
+  const [error, setError] = useState(null); // Estado para mensagens de erro
 
-const Banheiro = ({ id }) => {
-  const [banheiro, setBanheiro] = useState(null); // Armazena as informações do banheiro
-  const [isOpen, setIsOpen] = useState(false); // Controla a exibição do conteúdo do banheiro
-  const [showSensorList, setShowSensorList] = useState(false); // Controla a exibição da lista de sensores
-  const [selectedSensor, setSelectedSensor] = useState(null); // Armazena o sensor selecionado para adicionar
-
-  // Função para buscar o banheiro do banco de dados usando seu ID
-  const fetchBanheiro = async () => {
+  // Função para buscar os sensores do banco
+  const fetchSensores = async () => {
     try {
-      const response = await axios.get(`/banheiros/${id}`);
-      setBanheiro(response.data); // Definindo o estado do banheiro com os dados retornados
+      const response = await axios.get(`/sensores/${id}`); // A API agora retorna todos os sensores
+      setSensores(response.data); // Armazena os sensores encontrados
     } catch (error) {
-      console.error("Erro ao buscar o banheiro:", error);
+      console.error("Erro ao buscar sensores:", error);
+      setError("Erro ao carregar sensores.");
     }
   };
 
-  // Função para adicionar cabines ao banheiro
-  const addCabine = () => {
-    setBanheiro((prevBanheiro) => {
-      const newCabines = (prevBanheiro.Cabines || 0) + 1;  // Adiciona 1 cabine
-      return { ...prevBanheiro, Cabines: newCabines };
-    });
-  };
-
-  // Função para adicionar sensor ao banheiro
-  const addSensor = (sensorTipo) => {
-    setBanheiro((prevBanheiro) => {
-      const newSensor = { tipo: sensorTipo, id: Math.random().toString(36).substr(2, 9) }; // Gerar ID aleatório para o sensor
-      return { ...prevBanheiro, sensores: [...(prevBanheiro.sensores || []), newSensor] };
-    });
-    setShowSensorList(false); // Fechar a lista de sensores após adicionar
-  };
-
-  // Chama a função de buscar banheiro assim que o componente for montado
+  // Chama a função fetchSensores assim que o componente for montado
   useEffect(() => {
-    fetchBanheiro();
-  }, [id]);
-
-  // Verifica se o banheiro foi carregado corretamente
-  if (!banheiro) {
-    return <div>Carregando banheiro...</div>;
-  }
-
-  const { Nome, Localizacao, Cabines, sensores = [] } = banheiro;
+    fetchSensores();
+  }, [id]); // Reexecuta a busca sempre que o ID mudar
 
   return (
-    <div className="banheiro-container">
-      <div
-        className="banheiro-header"
-        onClick={() => setIsOpen((prev) => !prev)}
-      >
-        <h2>{Nome}</h2>
-        <span className={`arrow ${isOpen ? "open" : ""}`}>&#x25BC;</span> {/* seta */}
+    <div className="sensor-container">
+      <div className="sensor-header">
+        <h2>Sensores do Banheiro</h2>
       </div>
-      {isOpen && (
-        <div className="banheiro-content">
-          {/* Renderiza os sensores adicionados */}
-          <div className="banheiro-sensores">
-            <h4>Sensores:</h4>
-            {sensores.length === 0 ? (
-              <div>Sem sensores adicionados.</div>
-            ) : (
-              sensores.map((sensor) => (
-                <Sensor key={sensor.id} tipo={sensor.tipo} />
-              ))
-            )}
-          </div>
+      <div className="sensor-content">
+        {error && <div style={{ color: "red" }}>{error}</div>}
 
-          {/* Renderiza o número de cabines com base no valor do banco */}
-          {Array.from({ length: Cabines }).map((_, index) => (
-            <Cabine key={index} number={index + 1} />
-          ))}
-
-          {/* Botões de ações */}
-          <button onClick={addCabine}>Adicionar Cabine</button>
-
-          {/* Botão para adicionar sensor */}
-          <button onClick={() => setShowSensorList((prev) => !prev)}>
-            {showSensorList ? "Fechar Lista de Sensores" : "Adicionar Sensor"}
-          </button>
-
-          {/* Lista de sensores para escolher */}
-          {showSensorList && (
-            <div className="sensor-list">
-              <ul>
-                <li onClick={() => addSensor('Sabão')}>Sabão</li>
-                <li onClick={() => addSensor('Lixeira')}>Lixeira</li>
-                <li onClick={() => addSensor('Temperatura e Humidade')}>Temperatura e Humidade</li>
-                <li onClick={() => addSensor('Papel')}>Papel</li>
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
+        {/* Exibe os sensores */}
+        {sensores.length === 0 ? (
+          <div>Sem sensores cadastrados para este banheiro.</div>
+        ) : (
+          sensores.map((sensor) => (
+            <Sensor key={sensor.ID_Sensor} sensor={sensor} />
+          ))
+        )}
+      </div>
     </div>
   );
 };
 
-export default Banheiro;
+export default BanheiroSensores;
