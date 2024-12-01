@@ -81,22 +81,26 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.get('/sensores/:id', (req, res) => {
-    const { id } = req.params;
+app.get('/sensores', (req, res) => {
+    // Filtra sensores com resultado preenchido e limita a 4 registros
+    const query = `SELECT * FROM Sensor `;
 
-    // Consulta para buscar todos os sensores associados ao ID_Banheiro
-    const query = `SELECT Tipo_Sensor, Resultado_Atual FROM Sensor WHERE ID_Sensor = ?`;
-
-    banco.query(query, [id], (err, results) => {
+    banco.query(query, (err, results) => {
         if (err) {
             console.error('Erro ao buscar sensores:', err);
             return res.status(500).json({ error: 'Erro ao buscar sensores.' });
         }
 
-        // Retorna os sensores encontrados (sempre um array)
-        res.json(results || []); // Se não houver sensores, retorna um array vazio
+        // Transforma os resultados em um objeto (chave por índice)
+        const sensoresObj = {};
+        results.forEach((sensor, index) => {
+            sensoresObj[`sensor_${index + 1}`] = sensor;
+        });
+
+        res.json(sensoresObj);
     });
 });
+
 
 
 // Listar todos os usuários

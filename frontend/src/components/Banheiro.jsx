@@ -1,46 +1,66 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Sensor from "./Sensor"; // Componente que exibirá os sensores
 
-const BanheiroSensores = ({ id }) => {
-  const [sensores, setSensores] = useState([]); // Estado para armazenar os sensores
-  const [error, setError] = useState(null); // Estado para mensagens de erro
+const Banheiro = () => {
+  const [sensores, setSensores] = useState(null); // Estado para armazenar os sensores
+  const [error, setError] = useState(null);
 
-  // Função para buscar os sensores do banco
   const fetchSensores = async () => {
     try {
-      const response = await axios.get(`/sensores/${id}`); // A API agora retorna todos os sensores
-      setSensores(response.data); // Armazena os sensores encontrados
+      const response = await axios.get("http://localhost:3000/sensores"); // Requisição para pegar os dados dos sensores
+      console.log("Sensores recebidos:", response.data);
+      setSensores(response.data); // Armazena os dados recebidos
     } catch (error) {
       console.error("Erro ao buscar sensores:", error);
       setError("Erro ao carregar sensores.");
     }
   };
 
-  // Chama a função fetchSensores assim que o componente for montado
   useEffect(() => {
-    fetchSensores();
-  }, [id]); // Reexecuta a busca sempre que o ID mudar
+    fetchSensores(); // Chama a função para buscar os sensores na montagem do componente
+  }, []);
+
+  if (!sensores) {
+    return <div>Carregando sensores...</div>; // Exibe enquanto os dados não são carregados
+  }
 
   return (
     <div className="sensor-container">
-      <div className="sensor-header">
-        <h2>Sensores do Banheiro</h2>
-      </div>
+      <h2>Sensores do Banheiro</h2>
       <div className="sensor-content">
         {error && <div style={{ color: "red" }}>{error}</div>}
 
-        {/* Exibe os sensores */}
-        {sensores.length === 0 ? (
-          <div>Sem sensores cadastrados para este banheiro.</div>
-        ) : (
-          sensores.map((sensor) => (
-            <Sensor key={sensor.ID_Sensor} sensor={sensor} />
-          ))
+        {/* Verificando se cada sensor existe antes de acessar seus dados */}
+        {sensores.sensor_1 && (
+          <div className="sensor">
+            <h5>{sensores.sensor_1.Tipo_Sensor}</h5>
+            <p><strong>Resultado Atual:</strong> {sensores.sensor_1.Resultado_Atual}</p>
+          </div>
+        )}
+
+        {sensores.sensor_2 && (
+          <div className="sensor">
+            <h5>{sensores.sensor_2.Tipo_Sensor}</h5>
+            <p><strong>Resultado Atual:</strong> {sensores.sensor_2.Resultado_Atual}</p>
+          </div>
+        )}
+
+        {sensores.sensor_3 && (
+          <div className="sensor">
+            <h5>{sensores.sensor_3.Tipo_Sensor}</h5>
+            <p><strong>Resultado Atual:</strong> {sensores.sensor_3.Resultado_Atual}</p>
+          </div>
+        )}
+
+        {sensores.sensor_4 && (
+          <div className="sensor">
+            <h5>{sensores.sensor_4.Tipo_Sensor}</h5>
+            <p><strong>Resultado Atual:</strong> {sensores.sensor_4.Resultado_Atual}</p>
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-export default BanheiroSensores;
+export default Banheiro;

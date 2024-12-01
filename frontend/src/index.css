@@ -34,6 +34,7 @@ a {
     color: #434242;
 }
 
+/* Estilos para os Cards */
 .card {
     width: 100%;
     margin-top: 2vh;
@@ -44,7 +45,7 @@ a {
     padding: 50px;
 }
 
-.card>div {
+.card > div {
     background-color: #2C8D7C;
     color: #ffffff;
     width: 350px;
@@ -53,12 +54,9 @@ a {
     border-radius: 10px;
 }
 
-/* O conteúdo atual do seu index.css permanece aqui */
-
-/* ... seu código atual ... */
-
 /* Estilos de login */
-.login-overlay, .cadastro-overlay {
+.login-overlay,
+.cadastro-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -71,15 +69,17 @@ a {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease-in-out;
-    backdrop-filter: blur(5px); /* Desfoque de fundo */
+    backdrop-filter: blur(5px);
 }
 
-.login-overlay.active, .cadastro-overlay.active {
+.login-overlay.active,
+.cadastro-overlay.active {
     opacity: 1;
     pointer-events: all;
 }
 
-.login-container, .cadastro-container {
+.login-container,
+.cadastro-container {
     background-color: #fff;
     padding: 40px;
     border-radius: 8px;
@@ -87,15 +87,17 @@ a {
     width: 300px;
     max-width: 100%;
     opacity: 0;
-    transform: translateY(-50px); /* Começa acima da tela */
+    transform: translateY(-50px);
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.login-container.active, .cadastro-container.active {
+.login-container.active,
+.cadastro-container.active {
     opacity: 1;
     transform: translateY(0);
 }
 
+/* Estilos para input e button */
 input {
     width: 100%;
     padding: 10px;
@@ -128,7 +130,6 @@ button:hover {
     color: #ffffff;
 }
 
-/* Quando o link dentro do botão for hover, ele também vai ter cor branca */
 button a:hover {
     color: #ffffff;
 }
@@ -142,7 +143,6 @@ img {
     margin-right: auto;
     animation: fadeIn 1s ease-out;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* Transição suave */
 }
 
 img:hover {
@@ -154,13 +154,11 @@ img:hover {
     0% {
         opacity: 0;
         transform: translateY(-30px);
-        /* Começa deslocado para cima */
     }
 
     100% {
         opacity: 1;
         transform: translateY(0);
-        /* Termina na posição original */
     }
 }
 
@@ -168,121 +166,16 @@ img:hover {
     text-align: center;
     padding: 40px;
     animation: fadeIn 1s ease-out;
-    /* Aplica a animação */
 }
 
+/* Home */
 .home {
     align-items: center;
     justify-content: center;
     text-align: center;
 }
 
-.card {
-    width: 100%;
-    margin-top: 2vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2vw;
-    padding: 50px;
-}
-
-.card>div {
-    background-color: #2C8D7C;
-    color: #ffffff;
-    width: 350px;
-    height: auto;
-    padding: 2rem;
-    border-radius: 10px;
-}
-
-input {
-    border-radius: 5px;
-    border-style: none;
-    margin: 10px;
-    padding: 5px;
-}
-
-button {
-    background-color: #b7e9df;
-    width: 100px;
-    border-style: none;
-    border-radius: 5px;
-    font-size: 14px;
-    margin: 30px;
-    margin-bottom: 20px;
-    padding: 10px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0e453b;
-    color: #ffffff;
-}
-
-title {
-    text-align: start;
-}
-
-button a {
-    text-decoration: none;
-    color: #000000;
-}
-
-button:hover {
-    background-color: #0e453b;
-    color: #ffffff;
-}
-
-/* Quando o link dentro do botão for hover, ele também vai ter cor branca */
-button a:hover {
-    color: #ffffff;
-}
-
-img {
-    width: 50%;
-    max-height: 500px;
-    margin-top: 20px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    animation: fadeIn 1s ease-out;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* Transição suave */
-}
-
-img:hover {
-    transform: scale(1.1);
-}
-
-/* Definindo a animação */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-30px);
-        /* Começa deslocado para cima */
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-        /* Termina na posição original */
-    }
-}
-
-.title-home {
-    text-align: center;
-    padding: 40px;
-    animation: fadeIn 1s ease-out;
-    /* Aplica a animação */
-}
-
-.home {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
+/* Banheiro */
 .banheiro-container {
     padding: 20px;
     margin: 10px;
@@ -341,41 +234,3 @@ img:hover {
     border: 1px solid #ddd;
 }
 
-/* Cabine */
-.cabine {
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f5f5f5;
-    margin-top: 10px;
-}
-
-/* Cabeçalho da Cabine */
-.cabine-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    cursor: pointer;
-    background-color: #2C8D7C;
-    color: white;
-    border-radius: 5px;
-}
-
-.cabine-header:hover {
-    background-color: #226956;
-}
-
-.cabine-header h3 {
-    font-size: 16px;
-    margin: 0;
-}
-
-/* Conteúdo da Cabine */
-.cabine-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 10px;
-    justify-content: center;
-}
