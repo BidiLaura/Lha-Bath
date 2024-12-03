@@ -46,7 +46,7 @@ CREATE TABLE Banheiro (
 -- Tabela de Sensores Genéricos
 CREATE TABLE Sensor (
     ID_Sensor INT AUTO_INCREMENT PRIMARY KEY,
-    Tipo_Sensor ENUM('Humidade','Temperatura', 'Sabao', 'Lixeira', 'Papel') NOT NULL,
+    Tipo_Sensor ENUM('Umidade','Temperatura', 'Sabao', 'Lixeira', 'Papel') NOT NULL,
     Local VARCHAR(30),
     Resultado_Atual DECIMAL(5, 2),
     ID_Banheiro INT,
@@ -55,7 +55,7 @@ CREATE TABLE Sensor (
 
 -- Inserir dados de Humidade com ID 1
 INSERT INTO Sensor (ID_Sensor, Tipo_Sensor)
-VALUES (1, 'Humidade');
+VALUES (1, 'Umidade');
 
 -- Inserir dados de Temperatura com ID 2
 INSERT INTO Sensor (ID_Sensor, Tipo_Sensor)
@@ -95,4 +95,7 @@ CREATE TABLE Sensor_Logs (
 SELECT * FROM Sensor;
 
 SELECT * FROM User;
+
+
+
 

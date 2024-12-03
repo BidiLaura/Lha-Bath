@@ -209,28 +209,132 @@ img:hover {
     margin-top: 10px;
 }
 
-.sensor-list {
-    margin-top: 10px;
-}
-
-.sensor-list ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sensor-list li {
-    padding: 5px;
-    cursor: pointer;
-}
-
-.sensor-list li:hover {
-    background-color: #f0f0f0;
+.sensor-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 2rem;
 }
 
 .sensor {
-    padding: 10px;
-    margin-bottom: 5px;
     background-color: #f7f7f7;
     border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
 }
 
+.sensor-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #2C8D7C;
+}
+
+.sensor h5 {
+    font-size: 1.2rem;
+    color: #434242;
+    margin-bottom: 1rem;
+}
+
+.sensor-result {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #000;
+}
+
+.sensor-warning {
+    font-size: 0.9rem;
+    color: red;
+    margin-top: auto;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 768px) {
+    .sensor-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+
+/* Estilo para o container de gráficos */
+.charts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* Estilo para os títulos dos sensores */
+.chart-wrapper {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-wrapper h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #2C8D7C;
+}
+
+/* Estilo para os gráficos (diário, semanal, mensal, anual) */
+.sensor-charts {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* Estilo para cada gráfico individual */
+.sensor-charts > div {
+    background-color: #2C8D7C;
+    color: #ffffff;
+    flex: 1;
+    min-width: 220px; /* Garantir ajuste para telas pequenas */
+    max-width: 24%;
+    padding: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.sensor-charts > div h4 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.sensor-charts > div p {
+    font-size: 0.9rem;
+    color: #d9d9d9;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .sensor-charts > div {
+        max-width: 48%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sensor-charts {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sensor-charts > div {
+        max-width: 100%;
+    }
+}

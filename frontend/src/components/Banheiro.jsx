@@ -1,66 +1,71 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaThermometerHalf, FaTint, FaTrash, FaToiletPaper } from "react-icons/fa";
 
 const Banheiro = () => {
-  const [sensores, setSensores] = useState(null); // Estado para armazenar os sensores
-  const [error, setError] = useState(null);
+    const [sensores, setSensores] = useState(null);
+    const [error, setError] = useState(null);
 
-  const fetchSensores = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/sensores"); // Requisição para pegar os dados dos sensores
-      console.log("Sensores recebidos:", response.data);
-      setSensores(response.data); // Armazena os dados recebidos
-    } catch (error) {
-      console.error("Erro ao buscar sensores:", error);
-      setError("Erro ao carregar sensores.");
+    const fetchSensores = async () => {
+        try {
+            const response = await axios.get("http://localhost:3000/sensores");
+            setSensores(response.data);
+        } catch (error) {
+            setError("Erro ao carregar sensores.");
+        }
+    };
+
+    useEffect(() => {
+        fetchSensores();
+    }, []);
+
+    if (!sensores) {
+        return <div>Carregando sensores...</div>;
     }
-  };
 
-  useEffect(() => {
-    fetchSensores(); // Chama a função para buscar os sensores na montagem do componente
-  }, []);
+    const getSensorIcon = (type) => {
+        switch (type) {
+            case "Temperatura":
+                return <FaThermometerHalf className="sensor-icon" />;
+            case "Umidade":
+                return <FaTint className="sensor-icon" />;
+            case "Lixeira":
+                return <FaTrash className="sensor-icon" />;
+            case "Papel":
+                return <FaToiletPaper className="sensor-icon" />;
+            default:
+                return null;
+        }
+    };
 
-  if (!sensores) {
-    return <div>Carregando sensores...</div>; // Exibe enquanto os dados não são carregados
-  }
+    const getSensorWarning = (type, value) => {
+        if (type === "Papel" && value < 20) {
+            return "Atenção: Papel está acabando!";
+        }
+        if (type === "Lixeira" && value > 80) {
+            return "Atenção: Lixeira está cheia!";
+        }
+        return null;
+    };
 
-  return (
-    <div className="sensor-container">
-      <h2>Sensores do Banheiro</h2>
-      <div className="sensor-content">
-        {error && <div style={{ color: "red" }}>{error}</div>}
+    return (
+        <div className="sensor-container">
+            {error && <div style={{ color: "red" }}>{error}</div>}
 
-        {/* Verificando se cada sensor existe antes de acessar seus dados */}
-        {sensores.sensor_1 && (
-          <div className="sensor">
-            <h5>{sensores.sensor_1.Tipo_Sensor}</h5>
-            <p><strong>Resultado Atual:</strong> {sensores.sensor_1.Resultado_Atual}</p>
-          </div>
-        )}
-
-        {sensores.sensor_2 && (
-          <div className="sensor">
-            <h5>{sensores.sensor_2.Tipo_Sensor}</h5>
-            <p><strong>Resultado Atual:</strong> {sensores.sensor_2.Resultado_Atual}</p>
-          </div>
-        )}
-
-        {sensores.sensor_3 && (
-          <div className="sensor">
-            <h5>{sensores.sensor_3.Tipo_Sensor}</h5>
-            <p><strong>Resultado Atual:</strong> {sensores.sensor_3.Resultado_Atual}</p>
-          </div>
-        )}
-
-        {sensores.sensor_4 && (
-          <div className="sensor">
-            <h5>{sensores.sensor_4.Tipo_Sensor}</h5>
-            <p><strong>Resultado Atual:</strong> {sensores.sensor_4.Resultado_Atual}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+            {Object.entries(sensores).map(([key, sensor]) => (
+                <div key={key} className="sensor">
+                    {getSensorIcon(sensor.Tipo_Sensor)}
+                    <h5>{sensor.Tipo_Sensor}</h5>
+                    <p className="sensor-result">Resultado: {sensor.Resultado_Atual}</p>
+                    {getSensorWarning(sensor.Tipo_Sensor, sensor.Resultado_Atual) && (
+                        <p className="sensor-warning">
+                            {getSensorWarning(sensor.Tipo_Sensor, sensor.Resultado_Atual)}
+                        </p>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
 };
 
 export default Banheiro;

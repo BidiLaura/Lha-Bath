@@ -125,6 +125,127 @@ app.get('/banheiros', (req, res) => {
     });
 });
 
+app.get("/sensor-history/daily/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+  
+      const query = `
+        SELECT 
+            AVG(price) AS Resultado
+        FROM (
+            SELECT 
+                ID_Sensor, 
+                DATE(Data_Timestamp) AS Date, 
+                SUM(Resultado_Atual) AS price
+            FROM Sensor_Logs
+            WHERE ID_Sensor = ?
+            GROUP BY Date, HOUR(Data_Timestamp)
+        ) AS hourly_sums
+      `;
+  
+      const [results] = await connection.execute(query, [id]);
+      await connection.end();
+  
+      res.json(results);
+    } catch (error) {
+      console.error("Erro ao obter histórico diário:", error);
+      res.status(500).json({ error: "Erro ao obter histórico diário" });
+    }
+  });
+  
+  
+  app.get("/sensor-history/weekly/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+  
+      const query = `
+        SELECT 
+            AVG(price) AS Resultado
+        FROM (
+            SELECT 
+                ID_Sensor, 
+                YEAR(Data_Timestamp) AS Year, 
+                WEEK(Data_Timestamp) AS Week, 
+                SUM(Resultado_Atual) AS price
+            FROM Sensor_Logs
+            WHERE ID_Sensor = ?
+            GROUP BY Year, Week
+        ) AS weekly_sums
+      `;
+  
+      const [results] = await connection.execute(query, [id]);
+      await connection.end();
+  
+      res.json(results);
+    } catch (error) {
+      console.error("Erro ao obter histórico semanal:", error);
+      res.status(500).json({ error: "Erro ao obter histórico semanal" });
+    }
+  });
+  
+  
+  app.get("/sensor-history/monthly/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+  
+      const query = `
+        SELECT 
+            AVG(price) AS Resultado
+        FROM (
+            SELECT 
+                ID_Sensor, 
+                YEAR(Data_Timestamp) AS Year, 
+                MONTH(Data_Timestamp) AS Month, 
+                SUM(Resultado_Atual) AS price
+            FROM Sensor_Logs
+            WHERE ID_Sensor = ?
+            GROUP BY Year, Month
+        ) AS monthly_sums
+      `;
+  
+      const [results] = await connection.execute(query, [id]);
+      await connection.end();
+  
+      res.json(results);
+    } catch (error) {
+      console.error("Erro ao obter histórico mensal:", error);
+      res.status(500).json({ error: "Erro ao obter histórico mensal" });
+    }
+  });
+  
+  app.get("/sensor-history/yearly/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const connection = await mysql.createConnection(dbConfig);
+  
+      const query = `
+        SELECT 
+            AVG(price) AS Resultado
+        FROM (
+            SELECT 
+                ID_Sensor, 
+                YEAR(Data_Timestamp) AS Year, 
+                SUM(Resultado_Atual) AS price
+            FROM Sensor_Logs
+            WHERE ID_Sensor = ?
+            GROUP BY Year
+        ) AS yearly_sums
+      `;
+  
+      const [results] = await connection.execute(query, [id]);
+      await connection.end();
+  
+      res.json(results);
+    } catch (error) {
+      console.error("Erro ao obter histórico anual:", error);
+      res.status(500).json({ error: "Erro ao obter histórico anual" });
+    }
+  });
+  
+  
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
