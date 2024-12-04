@@ -1,141 +1,121 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import axios from "axios";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
 // Registrando os componentes necessários para o Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const SensorChartsCacetada = ({ sensorId, sensorName }) => { // Adicionando sensorName como prop
-  const [dailyData, setDailyData] = useState(null);
-  const [weeklyData, setWeeklyData] = useState(null);
-  const [monthlyData, setMonthlyData] = useState(null);
-  const [yearlyData, setYearlyData] = useState(null);
+export default function SensorChartsCacetada({ sensorId, sensorType }) {
+  const [chartData, setChartData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({});
+  const periods = ["daily", "weekly", "monthly", "yearly"];
 
   useEffect(() => {
-    const fetchChartData = async (endpoint, setter) => {
-      try {
-        const response = await fetch(endpoint);
-        const data = await response.json();
+    const fetchData = async () => {
+      setLoading(true); // Inicia o estado de carregamento
+      let dataCache = {};
 
-        const labels = data.map((_, index) => `${index + 1}`);
-        const values = data.map((item) => item.Resultado);
+      for (let period of periods) {
+        try {
+          // Verifica se os dados já estão no cache
+          if (!dataCache[period]) {
+            const response = await axios.get(
+              `http://localhost:3000/sensor-history/${period}/${sensorId}`,
+              { params: { type: sensorType } }
+            );
 
-        setter({
-          labels,
-          datasets: [
-            {
-              label: "Média",
-              data: values,
-              backgroundColor: "rgba(75, 192, 192, 0.6)",
-            },
-          ],
-        });
-      } catch (error) {
-        console.error("Erro ao buscar dados do gráfico:", error);
+            // Formata os dados para Chart.js
+            const labels = response.data.map((_, index) => `${index + 1}`);
+            const values = response.data.map((item) => item.Resultado);
+
+            dataCache[period] = {
+              labels,
+              datasets: [
+                {
+                  label: `Média (${period})`,
+                  data: values,
+                  backgroundColor: "rgba(75, 192, 192, 0.6)",
+                },
+              ],
+            };
+          }
+        } catch (error) {
+          setErrors((prev) => ({ ...prev, [period]: "Erro ao carregar os dados." }));
+          console.error(`Erro ao carregar os dados de ${period}:`, error);
+        }
       }
+
+      setChartData(dataCache);
+      setLoading(false); // Finaliza o carregamento
     };
 
-    fetchChartData(`/sensor-history/daily/${sensorId}`, setDailyData);
-    fetchChartData(`/sensor-history/weekly/${sensorId}`, setWeeklyData);
-    fetchChartData(`/sensor-history/monthly/${sensorId}`, setMonthlyData);
-    fetchChartData(`/sensor-history/yearly/${sensorId}`, setYearlyData);
-  }, [sensorId]);
+    fetchData();
+  }, [sensorId, sensorType]);
+
+  // Estilo responsivo
+  const containerStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "20px",
+  };
 
   return (
-    <div className="chart-wrapper">
-      <h3>Histórico do Sensor: {sensorName}</h3> {/* Exibindo o nome do sensor */}
-      <div className="sensor-charts">
-        <div>
-          <h4>Diário</h4>
-          {dailyData ? (
-            <Bar
-              data={dailyData}
-              options={{
-                responsive: true,
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Média Diária",
-                  },
-                  legend: {
-                    position: "top",
-                  },
-                },
-              }}
-            />
-          ) : (
-            <p>Carregando...</p>
-          )}
+    <div>
+      <h3>Gráficos do Sensor: {sensorType}</h3>
+      {loading ? (
+        <p>Carregando gráficos...</p>
+      ) : (
+        <div style={containerStyle}>
+          {periods.map((period) => (
+            <div key={period}>
+              <h4>{`Histórico ${period.charAt(0).toUpperCase() + period.slice(1)}`}</h4>
+              {errors[period] ? (
+                <p style={{ color: "red" }}>{errors[period]}</p>
+              ) : (
+                <Bar
+                  data={chartData[period]}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      title: {
+                        display: true,
+                        text: `Gráfico de Média (${period})`,
+                      },
+                      legend: {
+                        position: "top",
+                      },
+                    },
+                    scales: {
+                      x: {
+                        title: {
+                          display: true,
+                          text: "Período",
+                        },
+                      },
+                      y: {
+                        title: {
+                          display: true,
+                          text: "Média",
+                        },
+                      },
+                    },
+                  }}
+                />
+              )}
+            </div>
+          ))}
         </div>
-        <div>
-          <h4>Semanal</h4>
-          {weeklyData ? (
-            <Bar
-              data={weeklyData}
-              options={{
-                responsive: true,
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Média Semanal",
-                  },
-                  legend: {
-                    position: "top",
-                  },
-                },
-              }}
-            />
-          ) : (
-            <p>Carregando...</p>
-          )}
-        </div>
-        <div>
-          <h4>Mensal</h4>
-          {monthlyData ? (
-            <Bar
-              data={monthlyData}
-              options={{
-                responsive: true,
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Média Mensal",
-                  },
-                  legend: {
-                    position: "top",
-                  },
-                },
-              }}
-            />
-          ) : (
-            <p>Carregando...</p>
-          )}
-        </div>
-        <div>
-          <h4>Anual</h4>
-          {yearlyData ? (
-            <Bar
-              data={yearlyData}
-              options={{
-                responsive: true,
-                plugins: {
-                  title: {
-                    display: true,
-                    text: "Média Anual",
-                  },
-                  legend: {
-                    position: "top",
-                  },
-                },
-              }}
-            />
-          ) : (
-            <p>Carregando...</p>
-          )}
-        </div>
-      </div>
+      )}
     </div>
-  );  
-};
-
-export default SensorChartsCacetada;
+  );
+}
