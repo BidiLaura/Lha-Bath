@@ -7,6 +7,9 @@ import Cadastro from "./pages/Cadastro";
 import Painel from './pages/Painel'
 import ProtectedRoute from "./pages/ProtectedRoute";
 import AcessDenied from "./pages/AccessDenied";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./index.css"; 
+
 
 const router = createBrowserRouter([
   {
@@ -40,3 +43,16 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <RouterProvider router={router} />
 );
+
+const [darkMode, setDarkMode] = useState(false);
+const toggleDarkMode = () => {
+  setDarkMode((prevMode) => !prevMode);
+};
+
+useEffect(() => {
+  if (darkMode) {
+    document.body.classList.add("dark-mode");
+  } else {
+    document.body.classList.remove("dark-mode");
+  }
+}, [darkMode]);

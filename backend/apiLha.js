@@ -20,6 +20,17 @@ const secret = "auaumiau";
 app.post('/cadastro', async (req, res) => {
     const { Nome, CNPJ, Telefone, Email, Senha } = req.body;
 
+    // Verificar se o usuário já existe no banco
+    const [rows] = await connection.promise().query(
+        'SELECT id FROM User WHERE Email = ?',
+        [Email]
+    );
+
+    if (rows.length > 0) {
+        throw new Error('Usuário já existe');
+    }
+
+
     try {
         const hashedPassword = await bcrypt.hash(Senha, 10);
 

@@ -6,13 +6,6 @@
     font-family: "Jura", sans-serif;
 }
 
-.nav {
-    color: #ffffff;
-    height: 110px;
-    width: 100%;
-    background-color: #2C8D7C;
-}
-
 .nav,
 ul {
     list-style: none;
@@ -25,16 +18,17 @@ ul {
 }
 
 a:hover {
-    color: #000000;
-    transition: all 200ms linear;
+    color: #000000 !important;
+    transition: all 200ms linear !important;
 }
 
 a {
-    text-decoration: none;
-    color: #ffffff;
+    text-decoration: none !important;
+    color: #ffffff !important;
 }
 
-.login-overlay{
+
+.login-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -50,12 +44,12 @@ a {
     backdrop-filter: blur(5px);
 }
 
-.login-overlay.active{
+.login-overlay.active {
     opacity: 1;
     pointer-events: all;
 }
 
-.login-container{
+.login-container {
     background-color: #fff;
     padding: 40px;
     border-radius: 8px;
@@ -67,7 +61,7 @@ a {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.login-container.active{
+.login-container.active {
     opacity: 1;
     transform: translateY(0);
 }
@@ -81,28 +75,28 @@ input {
 }
 
 button {
-    width: 100px;
-    padding: 10px;
-    background-color: #2C8D7C;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 40px;
+    width: 100px !important;
+    padding: 10px !important;
+    background-color: #2C8D7C !important;
+    color: rgb(0, 0, 0) !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    margin: 40px !important; 
 }
 
 button a {
-    text-decoration: none;
-    color: #000000;
+    text-decoration: none !important;
+    color: #000000 !important;
 }
 
 button:hover {
-    background-color: #0e453b;
-    color: #ffffff;
+    background-color: #0e453b !important;
+    color: #ffffff !important;
 }
 
 button a:hover {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 img {
@@ -143,11 +137,20 @@ img:hover {
     animation: fadeIn 1s ease-out;
 }
 
-/* Home */
 .home {
     align-items: center;
     justify-content: center;
     text-align: center;
+    height: 100vh;
+    background-color:#fff;
+}
+
+.home .dark-mode{
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    background-color:#000000;
 }
 
 /* Banheiro */
@@ -270,11 +273,12 @@ img:hover {
 }
 
 /* Estilo para cada gráfico individual */
-.sensor-charts > div {
+.sensor-charts>div {
     background-color: #2C8D7C;
     color: #ffffff;
     flex: 1;
-    min-width: 220px; /* Garantir ajuste para telas pequenas */
+    min-width: 220px;
+    /* Garantir ajuste para telas pequenas */
     max-width: 24%;
     padding: 1.5rem;
     border-radius: 8px;
@@ -285,20 +289,20 @@ img:hover {
     text-align: center;
 }
 
-.sensor-charts > div h4 {
+.sensor-charts>div h4 {
     margin-bottom: 1rem;
     font-size: 1.1rem;
     color: #fff;
 }
 
-.sensor-charts > div p {
+.sensor-charts>div p {
     font-size: 0.9rem;
     color: #d9d9d9;
 }
 
 /* Ajustes responsivos */
 @media (max-width: 768px) {
-    .sensor-charts > div {
+    .sensor-charts>div {
         max-width: 48%;
     }
 }
@@ -309,7 +313,54 @@ img:hover {
         align-items: center;
     }
 
-    .sensor-charts > div {
+    .sensor-charts>div {
         max-width: 100%;
     }
+}
+
+/* Navbar */
+.navbar,
+.ml-auto {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 40px;
+    background-color: #2C8D7C;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Estilizando o Navbar.Brand */
+.navbar .navbar-brand {
+    font-size: 30px !important;
+    color: white !important;
+    padding-left: 20px;
+    transition: color 0.3s ease;
+    margin-left: 20px;
+}
+
+/* Estilo personalizado para o Form.Check */
+.custom-switch .form-check-input {
+    width: 50px;
+    height: 25px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    position: relative;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-switch .form-check-input:checked {
+    background-color: #17473F;
+}
+
+.custom-switch .form-check-input:checked:before {
+    left: 26px;
+}
+
+.custom-switch .form-check-input:focus {
+    outline: none;
+    box-shadow: none;
 }
