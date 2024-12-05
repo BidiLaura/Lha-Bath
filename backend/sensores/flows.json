@@ -1,8 +1,68 @@
 [
     {
-        "id": "cb24692582182371",
+        "id": "0ad28530b36f01d2",
         "type": "function",
-        "z": "b865c9a6e4510935",
+        "z": "727502332294abfd",
+        "name": "Humidade",
+        "func": "// Extrair o valor de umidade do JSON enviado pelo Arduino\nvar humidity = msg.payload.Umidade.humidity; // \"Umidade\" corresponde à chave JSON\n\n// Construir a consulta SQL para atualizar o valor no banco de dados\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Umidade';\n`;\n\n// Configurar o payload com o valor da umidade\nmsg.payload = [humidity];\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 220,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "d4dfba628adfbc21",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Temperatura",
+        "func": "// Atualizar dados de temperatura\nvar temperature = msg.payload.Temperatura.temperature;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Temperatura';`;\nmsg.payload = [temperature];\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 280,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "6bfb2baf88e5e921",
+        "type": "function",
+        "z": "727502332294abfd",
+        "name": "Papel",
+        "func": "// Atualizar dados de papel (distância)\nvar percentage = msg.payload.Papel.Percentage;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Papel';`;\nmsg.payload = [percentage];\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 340,
+        "wires": [
+            [
+                "ce9c9c02afb85ae5"
+            ]
+        ]
+    },
+    {
+        "id": "76c0beb51d4a772f",
+        "type": "function",
+        "z": "727502332294abfd",
         "name": "Lixeira",
         "func": "// Atualizar dados de lixeira (contador)\nvar contador = msg.payload.Lixeira.Contador;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Lixeira';`;\nmsg.payload = [contador];\nreturn msg;",
         "outputs": 1,
@@ -11,12 +71,35 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 240,
+        "x": 640,
+        "y": 400,
         "wires": [
             [
-                "8e6fd5427d61553d"
+                "ce9c9c02afb85ae5",
+                "60f9743a6286a9af"
             ]
         ]
+    },
+    {
+        "id": "ce9c9c02afb85ae5",
+        "type": "mysql",
+        "z": "727502332294abfd",
+        "mydb": "b2cc26c765796125",
+        "name": "Atualizar Banco de Dados",
+        "x": 840,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b2cc26c765796125",
+        "type": "MySQLdatabase",
+        "name": "DB Connection",
+        "host": "localhost",
+        "port": "3306",
+        "db": "Lhabath",
+        "tz": "",
+        "charset": "UTF8"
     }
 ]

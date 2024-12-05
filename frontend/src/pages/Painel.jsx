@@ -17,14 +17,19 @@ export default function Painel() {
         Nome_Sensor: sensor.Tipo_Sensor, // Supondo que "Tipo_Sensor" seja o nome do sensor
       }));
       setSensores(sensorNames); // Armazena os sensores com o nome e ID
+      setError(null); // Limpa erros ao carregar com sucesso
     } catch (error) {
       console.error("Erro ao buscar sensores:", error);
       setError("Erro ao carregar sensores.");
     }
   };
 
+  // Efeito para atualizar os sensores automaticamente a cada 5 segundos
   useEffect(() => {
-    fetchSensores(); // Busca os sensores quando o componente é montado
+    fetchSensores(); // Busca inicial
+    const interval = setInterval(fetchSensores, 5000); // Atualiza a cada 5 segundos
+
+    return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
   }, []);
 
   return (

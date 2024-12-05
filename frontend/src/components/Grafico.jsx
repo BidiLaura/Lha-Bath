@@ -18,7 +18,7 @@ export default function SensorChartsCacetada({ sensorId, sensorType }) {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
-  const periods = ["daily", "weekly", "monthly", "yearly"];
+  const periods = ["Diario", "Semanal", "Mensal", "Anual"];
 
   useEffect(() => {
     const fetchData = async () => {

@@ -35,10 +35,21 @@ void loop() {
   // Leitura do sensor ultrassônico
   unsigned int distance = sonar.ping_cm();
 
+  // Cálculo da porcentagem baseada na distância
+  float percentage;
+  if (distance <= 5) {
+    percentage = 100; // 100% quando <= 5 cm
+  } else if (distance >= 60) {
+    percentage = 0;   // 0% quando >= 60 cm
+  } else {
+    // Cálculo proporcional
+    percentage = 100 - ((distance - 5) * 100.0 / (60 - 5));
+  }
+
   // Contador baseado no sensor infravermelho
   bool infraState = digitalRead(INFRA_PIN);
   if (infraState == HIGH && lastInfraState == LOW) {
-    contador++;
+    contador = 1;
   }
   lastInfraState = infraState;
 
@@ -46,9 +57,9 @@ void loop() {
   StaticJsonDocument<300> jsonDoc;
 
   // Dados de humidade e temperatura
-  JsonObject humidade = jsonDoc.createNestedObject("Humidade");
+  JsonObject humidade = jsonDoc.createNestedObject("Umidade");
   humidade["humidity"] = humidity;  // Corrigido para usar o nome correto
-  humidade["Tipo_Sensor"] = "Humidade";
+  humidade["Tipo_Sensor"] = "Umidade";
 
   JsonObject Temperatura = jsonDoc.createNestedObject("Temperatura");
   Temperatura["temperature"] = temperature;  // Corrigido para usar o nome correto
@@ -56,7 +67,7 @@ void loop() {
 
   // Dados de distância (papel)
   JsonObject papel = jsonDoc.createNestedObject("Papel");
-  papel["Distance"] = distance;
+  papel["Percentage"] = percentage;   // Porcentagem calculada
   papel["Tipo_Sensor"] = "Papel";
 
   // Dados do contador (lixeira)

@@ -25,7 +25,6 @@ app.post('/cadastro', async (req, res) => {
         'SELECT id FROM User WHERE Email = ?',
         [Email]
     );
-
     if (rows.length > 0) {
         throw new Error('Usuário já existe');
     }
@@ -93,8 +92,8 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/sensores', (req, res) => {
-    // Filtra sensores com resultado preenchido e limita a 4 registros
-    const query = `SELECT * FROM Sensor `;
+    // Consulta para buscar todos os sensores
+    const query = `SELECT * FROM Sensor`;
 
     banco.query(query, (err, results) => {
         if (err) {
@@ -102,16 +101,22 @@ app.get('/sensores', (req, res) => {
             return res.status(500).json({ error: 'Erro ao buscar sensores.' });
         }
 
-        // Transforma os resultados em um objeto (chave por índice)
+        // Transformar os resultados em um objeto e verificar o estado da lixeira
         const sensoresObj = {};
         results.forEach((sensor, index) => {
-            sensoresObj[`sensor_${index + 1}`] = sensor;
+            if (sensor.Tipo_Sensor === "lixeira") {
+                sensoresObj[`sensor_${index + 1}`] = {
+                    ...sensor,
+                    Status: sensor.Resultado_Atual === 1 ? "cheia" : "não cheia"
+                };
+            } else {
+                sensoresObj[`sensor_${index + 1}`] = sensor;
+            }
         });
 
         res.json(sensoresObj);
     });
 });
-
 
 
 // Listar todos os usuários
@@ -136,7 +141,7 @@ app.get('/banheiros', (req, res) => {
     });
 });
 // Histórico diário
-app.get("/sensor-history/daily/:id", async (req, res) => {
+app.get("/sensor-history/Diario/:id", async (req, res) => {
     const { id } = req.params;
     const { type } = req.query; // Recebe o tipo do sensor como parâmetro
 
@@ -166,7 +171,7 @@ app.get("/sensor-history/daily/:id", async (req, res) => {
 });
 
 // Histórico semanal
-app.get("/sensor-history/weekly/:id", async (req, res) => {
+app.get("/sensor-history/Semanal/:id", async (req, res) => {
     const { id } = req.params;
     const { type } = req.query; // Recebe o tipo do sensor como parâmetro
 
@@ -197,7 +202,7 @@ app.get("/sensor-history/weekly/:id", async (req, res) => {
 });
 
 // Histórico mensal
-app.get("/sensor-history/monthly/:id", async (req, res) => {
+app.get("/sensor-history/Mensal/:id", async (req, res) => {
     const { id } = req.params;
     const { type } = req.query; // Recebe o tipo do sensor como parâmetro
 
@@ -228,7 +233,7 @@ app.get("/sensor-history/monthly/:id", async (req, res) => {
 });
 
 // Histórico anual
-app.get("/sensor-history/yearly/:id", async (req, res) => {
+app.get("/sensor-history/Anual/:id", async (req, res) => {
     const { id } = req.params;
     const { type } = req.query; // Recebe o tipo do sensor como parâmetro
 

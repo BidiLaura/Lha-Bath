@@ -364,3 +364,61 @@ img:hover {
     outline: none;
     box-shadow: none;
 }
+
+/* Posiciona o ícone de perfil no canto superior direito */
+.profile-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000; /* Garante que o dropdown fique sobre outros elementos */
+}
+
+/* Remove estilos padrão do botão */
+.profile-icon .dropdown-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.profile-icon .dropdown-toggle:focus {
+    box-shadow: none;
+}
+
+/* Estilo do dropdown */
+.profile-icon .dropdown-menu {
+    position: absolute;
+    top: 40px; /* Espaço abaixo do ícone */
+    right: 0;
+    background-color: #2C8D7C;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+    min-width: 200px;
+    z-index: 1100; /* Garante sobreposição */
+    text-align: left;
+}
+
+/* Estilo dos links no dropdown */
+.profile-icon .dropdown-menu a {
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.profile-icon .dropdown-menu a:hover {
+    background-color: #0e453b;
+    color: #ffffff;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 768px) {
+    .profile-icon .dropdown-menu {
+        min-width: 150px;
+    }
+}
