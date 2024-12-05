@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Alterado de useHistory para useNavigate
-import NavBar from "../components/NavBar"; // Presumo que você tenha esse componente NavBar
+import { useNavigate } from "react-router-dom"; 
+import NavBar from "../components/NavBar"; 
+import bcrypt from "bcryptjs"; // Importando bcryptjs para fazer o hash da senha no cliente
 
 const Cadastro = () => {
   const [formData, setFormData] = useState({
@@ -12,9 +13,9 @@ const Cadastro = () => {
     Senha: "",
     ConfirmarSenha: "",
   });
-  const [error, setError] = useState(""); // Para exibir mensagens de erro
-  const navigate = useNavigate(); // Usado para redirecionar após o login
-  const cadastroContainerRef = useRef(null); // Referência para a caixa de cadastro
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const cadastroContainerRef = useRef(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,13 +31,16 @@ const Cadastro = () => {
     }
 
     try {
+      // Fazendo o hash da senha no cliente antes de enviar para o servidor
+      const hashedPassword = await bcrypt.hash(Senha, 10); // 10 é o número de rounds do bcrypt
+
       // Enviar dados para o backend
       const res = await axios.post("http://localhost:3000/cadastro", {
         Nome,
         CNPJ,
         Telefone,
         Email,
-        Senha,
+        Senha: hashedPassword, // Envia a senha já criptografada
       });
 
       // Salvar token e redirecionar
@@ -66,8 +70,8 @@ const Cadastro = () => {
   return (
     <>
       <NavBar />
-      <div className="card">
-        <div ref={cadastroContainerRef}>
+      <div className="login-overlay active">
+        <div className="login-container active" ref={cadastroContainerRef}>
           <h1 className="title">Cadastro</h1>
           <h5>Nome:</h5>
           <input

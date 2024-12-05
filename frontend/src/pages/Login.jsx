@@ -1,20 +1,27 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Alterado de useHistory para useNavigate
-import NavBar from "../components/NavBar"; // Presumo que você tenha esse componente NavBar
+import { useNavigate } from "react-router-dom";
+import NavBar from "../components/NavBar"; 
+import bcrypt from "bcryptjs"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Usado para redirecionar após o login
-  const loginContainerRef = useRef(null); // Referência para a caixa de login
+  const navigate = useNavigate(); 
+  const loginContainerRef = useRef(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/login", { Email: email, Senha: senha });
+      const hashedPassword = await bcrypt.hash(senha, 10); 
+
+      const response = await axios.post("http://localhost:3000/login", {
+        Email: email,
+        Senha: hashedPassword, // Envia a senha já criptografada
+      });
+
       const { token, user } = response.data;
 
       // Armazenar o token e dados do usuário no localStorage
@@ -46,7 +53,7 @@ const Login = () => {
   return (
     <>
       <NavBar />
-      <div className="login-overlay active"> {/* Caixa de login com fundo desfocado */}
+      <div className="login-overlay active">
         <div className="login-container active" ref={loginContainerRef}>
           <h1 className="title">Login</h1>
           {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>} {/* Mensagem de erro */}

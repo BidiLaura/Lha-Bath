@@ -31,32 +31,10 @@ a:hover {
 
 a {
     text-decoration: none;
-    color: #434242;
-}
-
-/* Estilos para os Cards */
-.card {
-    width: 100%;
-    margin-top: 2vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2vw;
-    padding: 50px;
-}
-
-.card > div {
-    background-color: #2C8D7C;
     color: #ffffff;
-    width: 350px;
-    height: auto;
-    padding: 2rem;
-    border-radius: 10px;
 }
 
-/* Estilos de login */
-.login-overlay,
-.cadastro-overlay {
+.login-overlay{
     position: fixed;
     top: 0;
     left: 0;
@@ -72,14 +50,12 @@ a {
     backdrop-filter: blur(5px);
 }
 
-.login-overlay.active,
-.cadastro-overlay.active {
+.login-overlay.active{
     opacity: 1;
     pointer-events: all;
 }
 
-.login-container,
-.cadastro-container {
+.login-container{
     background-color: #fff;
     padding: 40px;
     border-radius: 8px;
@@ -91,13 +67,11 @@ a {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.login-container.active,
-.cadastro-container.active {
+.login-container.active{
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Estilos para input e button */
 input {
     width: 100%;
     padding: 10px;
@@ -107,17 +81,14 @@ input {
 }
 
 button {
-    width: 100%;
+    width: 100px;
     padding: 10px;
     background-color: #2C8D7C;
-    color: white;
+    color: rgb(0, 0, 0);
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-button:hover {
-    background-color: #226956;
+    margin: 40px;
 }
 
 button a {
@@ -160,6 +131,10 @@ img:hover {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.title {
+    margin-bottom: 10px;
 }
 
 .title-home {
