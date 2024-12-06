@@ -8,15 +8,23 @@ export default function Painel() {
   const [sensores, setSensores] = useState([]); // Estado para armazenar sensores
   const [error, setError] = useState(null);
 
+  // Lista de tipos de sensores permitidos
+  const allowedSensorTypes = ["Umidade", "Papel", "Sabao"];
+
   // Função para buscar os sensores cadastrados
   const fetchSensores = async () => {
     try {
       const response = await axios.get("http://localhost:3000/sensores"); // API que retorna os sensores
-      const sensorNames = Object.values(response.data).map((sensor) => ({
-        ID_Sensor: sensor.ID_Sensor,
-        Nome_Sensor: sensor.Tipo_Sensor, // Supondo que "Tipo_Sensor" seja o nome do sensor
-      }));
-      setSensores(sensorNames); // Armazena os sensores com o nome e ID
+
+      // Filtra os sensores com base nos tipos permitidos
+      const sensorNames = Object.values(response.data)
+        .filter((sensor) => allowedSensorTypes.includes(sensor.Tipo_Sensor))
+        .map((sensor) => ({
+          ID_Sensor: sensor.ID_Sensor,
+          Nome_Sensor: sensor.Tipo_Sensor, // Supondo que "Tipo_Sensor" seja o nome do sensor
+        }));
+
+      setSensores(sensorNames); // Armazena os sensores filtrados com o nome e ID
       setError(null); // Limpa erros ao carregar com sucesso
     } catch (error) {
       console.error("Erro ao buscar sensores:", error);

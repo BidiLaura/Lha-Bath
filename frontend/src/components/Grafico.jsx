@@ -19,8 +19,16 @@ export default function SensorChartsCacetada({ sensorId, sensorType }) {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const periods = ["Diario", "Semanal", "Mensal", "Anual"];
+  const allowedSensorTypes = ["Umidade", "Papel", "Sabao"]; // Tipos permitidos
 
   useEffect(() => {
+    // Ignorar sensores que não estão na lista permitida
+    if (!allowedSensorTypes.includes(sensorType)) {
+      setErrors({ global: "Tipo de sensor não suportado para gráficos." });
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       setLoading(true); // Inicia o estado de carregamento
       let dataCache = {};
@@ -50,7 +58,10 @@ export default function SensorChartsCacetada({ sensorId, sensorType }) {
             };
           }
         } catch (error) {
-          setErrors((prev) => ({ ...prev, [period]: "Erro ao carregar os dados." }));
+          setErrors((prev) => ({
+            ...prev,
+            [period]: "Erro ao carregar os dados.",
+          }));
           console.error(`Erro ao carregar os dados de ${period}:`, error);
         }
       }
@@ -74,6 +85,8 @@ export default function SensorChartsCacetada({ sensorId, sensorType }) {
       <h3>Gráficos do Sensor: {sensorType}</h3>
       {loading ? (
         <p>Carregando gráficos...</p>
+      ) : errors.global ? (
+        <p style={{ color: "red" }}>{errors.global}</p>
       ) : (
         <div style={containerStyle}>
           {periods.map((period) => (

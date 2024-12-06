@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaThermometerHalf, FaTint, FaTrash, FaToiletPaper } from "react-icons/fa";
+import {
+  FaThermometerHalf,
+  FaTint,
+  FaTrash,
+  FaToiletPaper,
+  FaSoap, // Ícone de Sabão
+} from "react-icons/fa";
 
 const Banheiro = () => {
   const [sensores, setSensores] = useState(null);
@@ -39,17 +45,22 @@ const Banheiro = () => {
         return <FaTrash className="sensor-icon" />;
       case "Papel":
         return <FaToiletPaper className="sensor-icon" />;
+      case "Sabao":
+        return <FaSoap className="sensor-icon" />;
       default:
         return null;
     }
   };
 
   const getSensorWarning = (type, value) => {
-    if (type === "Papel" && value < 20) {
+    if (type === "Papel" && value < 5) {
       return "Atenção: Papel está acabando!";
     }
     if (type === "Lixeira" && value === 1) {
       return "Atenção: Lixeira está cheia!";
+    }
+    if (type === "Sabao" && value < 10) { 
+      return "Atenção: Sabão está acabando!";
     }
     return null;
   };

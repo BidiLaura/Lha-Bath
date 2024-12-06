@@ -21,8 +21,8 @@ app.post('/cadastro', async (req, res) => {
     const { Nome, CNPJ, Telefone, Email, Senha } = req.body;
 
     // Verificar se o usuário já existe no banco
-    const [rows] = await connection.promise().query(
-        'SELECT id FROM User WHERE Email = ?',
+    const [rows] = await banco.promise().query(
+        'SELECT ID_User FROM User WHERE Email = ?',
         [Email]
     );
     if (rows.length > 0) {
@@ -60,7 +60,6 @@ app.post('/cadastro', async (req, res) => {
 
                 const userId = userResult.insertId;
                 const token = jwt.sign({ id: userId }, secret, { expiresIn: '2 days' });
-
                 res.status(201).json({ token });
             });
         });
@@ -71,23 +70,36 @@ app.post('/cadastro', async (req, res) => {
 });
 
 // Login de usuário
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { Email, Senha } = req.body;
 
+    // Verifica se os campos foram preenchidos
+    if (!Email || !Senha) {
+        return res.status(400).json({ error: 'Email e Senha são obrigatórios.' });
+    }
+
     banco.query(`SELECT * FROM User WHERE Email = ?`, [Email], async (err, results) => {
-        if (err || results.length === 0) {
+        if (err) {
+            console.error('Erro na consulta:', err);
+            return res.status(500).json({ error: 'Erro no servidor.' });
+        }
+
+        if (results.length === 0) {
             return res.status(404).json({ error: 'Usuário não encontrado.' });
         }
 
         const user = results[0];
+
+        // Compara a senha fornecida com a senha criptografada no banco
         const passwordMatch = await bcrypt.compare(Senha, user.Senha);
 
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Credenciais inválidas.' });
         }
 
+        // Gera o token JWT
         const token = jwt.sign({ id: user.ID_User }, secret, { expiresIn: '2 days' });
-        res.json({ token, user });
+        res.json({ token, user: { id: user.ID_User, email: user.Email } }); // Envia apenas dados essenciais do usuário
     });
 });
 
