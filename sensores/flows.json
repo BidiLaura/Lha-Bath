@@ -43,7 +43,7 @@
         "type": "function",
         "z": "48682c489b8a69dd",
         "name": "Temperatura",
-        "func": "// Atualizar dados de temperatura\nvar temperature = msg.payload.Temperatura.temperature;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Temperatura' AND Local = 'Banheiro 1';`;\nmsg.payload = [temperature];\nreturn msg;",
+        "func": "// Extrair os dados de temperatura\nvar temperature = msg.payload.Temperatura.temperature;\n\n// Criar o comando SQL (ou outro processamento)\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Temperatura';\n`;\nmsg.payload = [temperature];\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -63,7 +63,7 @@
         "type": "function",
         "z": "48682c489b8a69dd",
         "name": "Papel",
-        "func": "// Atualizar dados de papel (distância)\nvar distance = msg.payload.Papel.Distance;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Papel' AND Local = 'Banheiro 1';`;\nmsg.payload = [distance];\nreturn msg;",
+        "func": "// Extrair a porcentagem do papel\nvar percentage = msg.payload.Papel.Percentage;\n\n// Criar o comando SQL (ou outro processamento)\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Papel';\n`;\nmsg.payload = [percentage];\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -83,7 +83,7 @@
         "type": "function",
         "z": "48682c489b8a69dd",
         "name": "Lixeira",
-        "func": "// Atualizar dados de lixeira (contador)\nvar contador = msg.payload.Lixeira.Contador;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Lixeira' AND Local = 'Banheiro 1';`;\nmsg.payload = [contador];\nreturn msg;",
+        "func": "// Extrair a porcentagem do papel\nvar percentage2 = msg.payload.Lixeira.Percentage2;\n\n// Criar o comando SQL (ou outro processamento)\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Lixeira';\n`;\nmsg.payload = [percentage2];\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -94,7 +94,8 @@
         "y": 440,
         "wires": [
             [
-                "784b3e4cb833ebf1"
+                "784b3e4cb833ebf1",
+                "6764b1fe327abf8b"
             ]
         ]
     },
@@ -103,7 +104,7 @@
         "type": "serial in",
         "z": "48682c489b8a69dd",
         "name": "Arduino Serial Input",
-        "serial": "42ef55fbc6afc594",
+        "serial": "2c7997133d665ef7",
         "x": 170,
         "y": 240,
         "wires": [
@@ -123,6 +124,38 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "6764b1fe327abf8b",
+        "type": "debug",
+        "z": "48682c489b8a69dd",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "2c7997133d665ef7",
+        "type": "serial-port",
+        "name": "",
+        "serialport": "COM3",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
     },
     {
         "id": "b2cc26c765796125",
