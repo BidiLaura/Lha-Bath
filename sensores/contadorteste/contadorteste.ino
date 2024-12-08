@@ -12,22 +12,17 @@ DHT dht(DHTPIN, DHTTYPE);    // Inicializa o sensor DHT
 #define ECHO_PIN 4           // Pino ECHO do ultrassônico (ambiente)
 #define TRIG_PIN2 6          // Pino TRIG do ultrassônico (lixeira)
 #define ECHO_PIN2 7          // Pino ECHO do ultrassônico (lixeira)
+#define TRIG_PIN3 8          // Pino TRIG do ultrassônico (sabão)
+#define ECHO_PIN3 9          // Pino ECHO do ultrassônico (sabão)
 #define MAX_DISTANCE 200     // Distância máxima em cm
 NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);
 NewPing sonar2(TRIG_PIN2, ECHO_PIN2, MAX_DISTANCE);
-
-// Configurações do contador infravermelho
-#define INFRA_PIN 5          // Pino do sensor infravermelho
-bool lastInfraState = LOW;   // Estado anterior do sensor
-int contador = 0;            // Contador
+NewPing sonar3(TRIG_PIN3, ECHO_PIN3, MAX_DISTANCE);
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Sistema Iniciado");
-
-  // Inicializa os sensores
   dht.begin();
-  pinMode(INFRA_PIN, INPUT);
 }
 
 void loop() {
@@ -40,6 +35,9 @@ void loop() {
 
   // Leitura do sensor ultrassônico (lixeira)
   unsigned int distance2 = sonar2.ping_cm();
+
+    // Leitura do sensor ultrassônico (lixeira)
+  unsigned int distance3 = sonar3.ping_cm();
 
   // Cálculo da porcentagem baseada na distância (ambiente)
   float percentage;
@@ -63,12 +61,16 @@ void loop() {
     percentage2 = ((distance2 - 5) * 100.0 / (60 - 5));
   }
 
-  // Contador baseado no sensor infravermelho
-  bool infraState = digitalRead(INFRA_PIN);
-  if (infraState == HIGH && lastInfraState == LOW) {
-    contador = 1;
+    // Cálculo da porcentagem baseada na distância (sabão - lógica inversa)
+  float percentage3;
+  if (distance3 >= 5) {
+    percentage3 = 0; // 0% quando <= 5 cm
+  } else if (distance3 <= 10) {
+    percentage3 = 100;   // 100% quando >= 60 cm
+  } else {
+    // Cálculo proporcional inverso
+    percentage3 = ((distance3 - 5) * 100.0 / (60 - 5));
   }
-  lastInfraState = infraState;
 
   // Criação do objeto JSON
   StaticJsonDocument<400> jsonDoc;
@@ -91,6 +93,11 @@ void loop() {
   JsonObject lixeira = jsonDoc.createNestedObject("Lixeira");
   lixeira["Percentage2"] = percentage2;
   lixeira["Tipo_Sensor"] = "Lixeira";
+
+    // Dados de distância (lixeira)
+  JsonObject sabão = jsonDoc.createNestedObject("Sabão");
+  lixeira["Percentage3"] = percentage3;
+  lixeira["Tipo_Sensor"] = "Sabão";
 
   // Serializa o objeto JSON e envia via Serial
   serializeJson(jsonDoc, Serial);
