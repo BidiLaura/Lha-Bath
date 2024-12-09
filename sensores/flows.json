@@ -4,9 +4,9 @@
         "type": "serial in",
         "z": "b865c9a6e4510935",
         "name": "Arduino Serial Input",
-        "serial": "42ef55fbc6afc594",
-        "x": 90,
-        "y": 80,
+        "serial": "73add415dd992cd6",
+        "x": 250,
+        "y": 200,
         "wires": [
             [
                 "57c3c149ab521a8f"
@@ -21,8 +21,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 250,
-        "y": 160,
+        "x": 410,
+        "y": 280,
         "wires": [
             [
                 "e8bf65c8506d0507",
@@ -38,15 +38,15 @@
         "type": "function",
         "z": "b865c9a6e4510935",
         "name": "Humidade",
-        "func": "// Atualizar dados de humidade\nvar humidity = msg.payload.Humidade.humidity;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Humidade';`;\nmsg.payload = [humidity];\nreturn msg;",
+        "func": "// Atualizar dados de humidade\nvar umidade = msg.payload.Umidade.humidity;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Umidade';`;\nmsg.payload = [umidade];\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 60,
+        "x": 610,
+        "y": 180,
         "wires": [
             [
                 "8e6fd5427d61553d"
@@ -65,8 +65,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 120,
+        "x": 610,
+        "y": 240,
         "wires": [
             [
                 "8e6fd5427d61553d"
@@ -85,11 +85,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 180,
+        "x": 610,
+        "y": 300,
         "wires": [
             [
-                "8e6fd5427d61553d"
+                "8e6fd5427d61553d",
+                "163afb7fc74d1860"
             ]
         ]
     },
@@ -105,11 +106,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 240,
+        "x": 610,
+        "y": 360,
         "wires": [
             [
-                "8e6fd5427d61553d"
+                "8e6fd5427d61553d",
+                "163afb7fc74d1860"
             ]
         ]
     },
@@ -119,8 +121,8 @@
         "z": "b865c9a6e4510935",
         "mydb": "b2cc26c765796125",
         "name": "Atualizar Banco de Dados",
-        "x": 650,
-        "y": 140,
+        "x": 890,
+        "y": 260,
         "wires": [
             []
         ]
@@ -137,8 +139,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 300,
+        "x": 610,
+        "y": 420,
         "wires": [
             [
                 "8e6fd5427d61553d"
@@ -146,19 +148,31 @@
         ]
     },
     {
-        "id": "42ef55fbc6afc594",
+        "id": "163afb7fc74d1860",
+        "type": "debug",
+        "z": "b865c9a6e4510935",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "73add415dd992cd6",
         "type": "serial-port",
         "name": "",
-        "serialport": "COM7",
+        "serialport": "COM6",
         "serialbaud": "9600",
         "databits": "8",
         "parity": "none",
         "stopbits": "1",
         "waitfor": "",
-        "dtr": "none",
-        "rts": "none",
-        "cts": "none",
-        "dsr": "none",
         "newline": "\\n",
         "bin": "false",
         "out": "char",
@@ -169,9 +183,9 @@
         "id": "b2cc26c765796125",
         "type": "MySQLdatabase",
         "name": "",
-        "host": "127.0.0.1",
+        "host": "bf2hgksbofkyol7tyssq-mysql.services.clever-cloud.com",
         "port": "3306",
-        "db": "Lhabath",
+        "db": "bf2hgksbofkyol7tyssq",
         "tz": "",
         "charset": "UTF8"
     }
