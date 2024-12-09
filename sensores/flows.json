@@ -1,156 +1,164 @@
 [
     {
-        "id": "47269672201ba713",
+        "id": "4c41d213406498d7",
+        "type": "serial in",
+        "z": "b865c9a6e4510935",
+        "name": "Arduino Serial Input",
+        "serial": "42ef55fbc6afc594",
+        "x": 90,
+        "y": 80,
+        "wires": [
+            [
+                "57c3c149ab521a8f"
+            ]
+        ]
+    },
+    {
+        "id": "57c3c149ab521a8f",
         "type": "json",
-        "z": "48682c489b8a69dd",
+        "z": "b865c9a6e4510935",
         "name": "Parse JSON",
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 400,
-        "y": 280,
+        "x": 250,
+        "y": 160,
         "wires": [
             [
-                "2889d700c1dcaf03",
-                "274950c640155880",
-                "07ee188ebd4104e4",
-                "df7fe6560a199404"
+                "e8bf65c8506d0507",
+                "53de8608f6c9deb4",
+                "cb24692582182371",
+                "96941197e71d5387",
+                "153b2824e8075f56"
             ]
         ]
     },
     {
-        "id": "2889d700c1dcaf03",
+        "id": "e8bf65c8506d0507",
         "type": "function",
-        "z": "48682c489b8a69dd",
+        "z": "b865c9a6e4510935",
         "name": "Humidade",
-        "func": "// Extrair o valor de umidade do JSON enviado pelo Arduino\nvar humidity = msg.payload.Umidade.humidity; // \"Umidade\" corresponde à chave JSON\n\n// Construir a consulta SQL para atualizar o valor no banco de dados\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Umidade';\n`;\n\n// Configurar o payload com o valor da umidade\nmsg.payload = [humidity];\n\nreturn msg;\n",
+        "func": "// Atualizar dados de humidade\nvar humidity = msg.payload.Humidade.humidity;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Humidade';`;\nmsg.payload = [humidity];\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 610,
-        "y": 260,
+        "x": 450,
+        "y": 60,
         "wires": [
             [
-                "784b3e4cb833ebf1"
+                "8e6fd5427d61553d"
             ]
         ]
     },
     {
-        "id": "df7fe6560a199404",
+        "id": "96941197e71d5387",
         "type": "function",
-        "z": "48682c489b8a69dd",
+        "z": "b865c9a6e4510935",
         "name": "Temperatura",
-        "func": "// Extrair os dados de temperatura\nvar temperature = msg.payload.Temperatura.temperature;\n\n// Criar o comando SQL (ou outro processamento)\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Temperatura';\n`;\nmsg.payload = [temperature];\n\nreturn msg;\n",
+        "func": "// Atualizar dados de temperatura\nvar temperature = msg.payload.Temperatura.temperature;\nmsg.topic = `UPDATE Sensor SET Resultado_Atual = ? WHERE Tipo_Sensor = 'Temperatura';`;\nmsg.payload = [temperature];\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 610,
-        "y": 320,
+        "x": 450,
+        "y": 120,
         "wires": [
             [
-                "784b3e4cb833ebf1"
+                "8e6fd5427d61553d"
             ]
         ]
     },
     {
-        "id": "274950c640155880",
+        "id": "53de8608f6c9deb4",
         "type": "function",
-        "z": "48682c489b8a69dd",
+        "z": "b865c9a6e4510935",
         "name": "Papel",
-        "func": "// Extrair a porcentagem do papel\nvar percentage = msg.payload.Papel.Percentage;\n\n// Criar o comando SQL (ou outro processamento)\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Papel';\n`;\nmsg.payload = [percentage];\n\nreturn msg;\n",
+        "func": "// Extrair a porcentagem do sabão\nvar percentage = msg.payload.Papel.Percentage;\n\n// Criar o comando SQL\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Papel';\n`;\nmsg.payload = [percentage];\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 610,
-        "y": 380,
+        "x": 450,
+        "y": 180,
         "wires": [
             [
-                "784b3e4cb833ebf1"
+                "8e6fd5427d61553d"
             ]
         ]
     },
     {
-        "id": "07ee188ebd4104e4",
+        "id": "cb24692582182371",
         "type": "function",
-        "z": "48682c489b8a69dd",
+        "z": "b865c9a6e4510935",
         "name": "Lixeira",
-        "func": "// Extrair a porcentagem do papel\nvar percentage2 = msg.payload.Lixeira.Percentage2;\n\n// Criar o comando SQL (ou outro processamento)\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Lixeira';\n`;\nmsg.payload = [percentage2];\n\nreturn msg;\n",
+        "func": "// Extrair a porcentagem do sabão\nvar percentage2 = msg.payload.Lixeira.Percentage2;\n\n// Criar o comando SQL\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Lixeira';\n`;\nmsg.payload = [percentage2];\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 610,
-        "y": 440,
-        "wires": [
-            [
-                "784b3e4cb833ebf1",
-                "6764b1fe327abf8b"
-            ]
-        ]
-    },
-    {
-        "id": "7fe165823f2bd986",
-        "type": "serial in",
-        "z": "48682c489b8a69dd",
-        "name": "Arduino Serial Input",
-        "serial": "2c7997133d665ef7",
-        "x": 170,
+        "x": 450,
         "y": 240,
         "wires": [
             [
-                "47269672201ba713"
+                "8e6fd5427d61553d"
             ]
         ]
     },
     {
-        "id": "784b3e4cb833ebf1",
+        "id": "8e6fd5427d61553d",
         "type": "mysql",
-        "z": "48682c489b8a69dd",
+        "z": "b865c9a6e4510935",
         "mydb": "b2cc26c765796125",
         "name": "Atualizar Banco de Dados",
-        "x": 810,
-        "y": 340,
+        "x": 650,
+        "y": 140,
         "wires": [
             []
         ]
     },
     {
-        "id": "6764b1fe327abf8b",
-        "type": "debug",
-        "z": "48682c489b8a69dd",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 540,
-        "wires": []
+        "id": "153b2824e8075f56",
+        "type": "function",
+        "z": "b865c9a6e4510935",
+        "name": "Sabão",
+        "func": "// Extrair a porcentagem do sabão\nvar percentage3 = msg.payload.Sabão.Percentage3;\n\n// Criar o comando SQL\nmsg.topic = `\n    UPDATE Sensor\n    SET Resultado_Atual = ?\n    WHERE Tipo_Sensor = 'Sabão';\n`;\nmsg.payload = [percentage3];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 300,
+        "wires": [
+            [
+                "8e6fd5427d61553d"
+            ]
+        ]
     },
     {
-        "id": "2c7997133d665ef7",
+        "id": "42ef55fbc6afc594",
         "type": "serial-port",
         "name": "",
-        "serialport": "COM3",
+        "serialport": "COM7",
         "serialbaud": "9600",
         "databits": "8",
         "parity": "none",
         "stopbits": "1",
         "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
         "newline": "\\n",
         "bin": "false",
         "out": "char",
@@ -160,8 +168,8 @@
     {
         "id": "b2cc26c765796125",
         "type": "MySQLdatabase",
-        "name": "DB Connection",
-        "host": "localhost",
+        "name": "",
+        "host": "127.0.0.1",
         "port": "3306",
         "db": "Lhabath",
         "tz": "",

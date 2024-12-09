@@ -95,7 +95,7 @@ void loop() {
   lixeira["Tipo_Sensor"] = "Lixeira";
 
     // Dados de distância (lixeira)
-  JsonObject sabão = jsonDoc.createNestedObject("Sabão");
+  JsonObject sabao = jsonDoc.createNestedObject("Sabão");
   lixeira["Percentage3"] = percentage3;
   lixeira["Tipo_Sensor"] = "Sabão";
 
