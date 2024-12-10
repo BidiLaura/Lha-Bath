@@ -72,14 +72,14 @@ VALUES (4, 'Lixeira');
 INSERT INTO Sensor (ID_Sensor, Tipo_Sensor)
 VALUES (5, 'Sabão');
 
--- Atualizar a tabela Sensor_Historico
 CREATE TABLE Sensor_Historico (
     ID_Historico INT AUTO_INCREMENT PRIMARY KEY,
     ID_Sensor INT NOT NULL,
     Tipo_Sensor ENUM('Umidade', 'Temperatura', 'Sabão', 'Lixeira', 'Papel') NOT NULL,
-    Historico_Periodo ENUM('Dia', 'Semana', 'Mes', 'Ano') NOT NULL,
-    Resultado DECIMAL(5, 2),
+    Historico_Periodo ENUM('Dia', 'Semana', 'Mes', 'Ano', 'Update') NOT NULL,
+    Resultado DECIMAL(5, 2) NOT NULL,
     Data_Timestamp DATETIME NOT NULL,
+    UNIQUE KEY (ID_Sensor, Tipo_Sensor, Historico_Periodo, Data_Timestamp),
     FOREIGN KEY (ID_Sensor) REFERENCES Sensor(ID_Sensor) ON DELETE CASCADE
 );
 
@@ -99,38 +99,37 @@ CREATE TABLE Sensor_Logs (
 
 SELECT * FROM Sensor;
 
-SELECT * FROM User;
-
+SELECT * FROM Sensor_Historico;
 DELIMITER $$
 
 CREATE TRIGGER AtualizarSensorHistorico
-AFTER INSERT ON Sensor_Logs
+AFTER UPDATE ON Sensor
 FOR EACH ROW
 BEGIN
-    -- Atualizar ou inserir histórico diário
+    -- Histórico diário
     INSERT INTO Sensor_Historico (ID_Sensor, Tipo_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Dia', NEW.Resultado_Atual, DATE(NEW.Data_Timestamp))
+    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Dia', NEW.Resultado_Atual, NOW())
     ON DUPLICATE KEY UPDATE
         Resultado = (Resultado + NEW.Resultado_Atual) / 2,
         Data_Timestamp = NOW();
 
-    -- Atualizar ou inserir histórico semanal
+    -- Histórico semanal
     INSERT INTO Sensor_Historico (ID_Sensor, Tipo_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Semana', NEW.Resultado_Atual, DATE(NEW.Data_Timestamp - INTERVAL WEEKDAY(NEW.Data_Timestamp) DAY))
+    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Semana', NEW.Resultado_Atual, NOW() - INTERVAL WEEKDAY(NOW()) DAY)
     ON DUPLICATE KEY UPDATE
         Resultado = (Resultado + NEW.Resultado_Atual) / 2,
         Data_Timestamp = NOW();
 
-    -- Atualizar ou inserir histórico mensal
+    -- Histórico mensal
     INSERT INTO Sensor_Historico (ID_Sensor, Tipo_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Mes', NEW.Resultado_Atual, DATE_FORMAT(NEW.Data_Timestamp, '%Y-%m-01'))
+    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Mes', NEW.Resultado_Atual, DATE_FORMAT(NOW(), '%Y-%m-01'))
     ON DUPLICATE KEY UPDATE
         Resultado = (Resultado + NEW.Resultado_Atual) / 2,
         Data_Timestamp = NOW();
 
-    -- Atualizar ou inserir histórico anual
+    -- Histórico anual
     INSERT INTO Sensor_Historico (ID_Sensor, Tipo_Sensor, Historico_Periodo, Resultado, Data_Timestamp)
-    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Ano', NEW.Resultado_Atual, DATE_FORMAT(NEW.Data_Timestamp, '%Y-01-01'))
+    VALUES (NEW.ID_Sensor, NEW.Tipo_Sensor, 'Ano', NEW.Resultado_Atual, DATE_FORMAT(NOW(), '%Y-01-01'))
     ON DUPLICATE KEY UPDATE
         Resultado = (Resultado + NEW.Resultado_Atual) / 2,
         Data_Timestamp = NOW();

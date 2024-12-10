@@ -159,17 +159,10 @@ app.get("/sensor-history/Diario/:id", async (req, res) => {
 
     const query = `
         SELECT 
-            AVG(price) AS Resultado
-        FROM (
-            SELECT 
-                ID_Sensor, 
-                Tipo_Sensor,
-                DATE(Data_Timestamp) AS Date, 
-                SUM(Resultado_Atual) AS price
-            FROM Sensor_Logs
-            WHERE ID_Sensor = ? AND Tipo_Sensor = ?
-            GROUP BY Date, HOUR(Data_Timestamp)
-        ) AS hourly_sums
+            AVG(Resultado) AS Resultado
+        FROM Sensor_Historico
+        WHERE ID_Sensor = ? AND Tipo_Sensor = ? AND Historico_Periodo = 'Dia'
+        GROUP BY DATE(Data_Timestamp)
     `;
 
     banco.query(query, [id, type], (err, results) => {
@@ -189,18 +182,10 @@ app.get("/sensor-history/Semanal/:id", async (req, res) => {
 
     const query = `
         SELECT 
-            AVG(price) AS Resultado
-        FROM (
-            SELECT 
-                ID_Sensor, 
-                Tipo_Sensor,
-                YEAR(Data_Timestamp) AS Year, 
-                WEEK(Data_Timestamp) AS Week, 
-                SUM(Resultado_Atual) AS price
-            FROM Sensor_Logs
-            WHERE ID_Sensor = ? AND Tipo_Sensor = ?
-            GROUP BY Year, Week
-        ) AS weekly_sums
+            AVG(Resultado) AS Resultado
+        FROM Sensor_Historico
+        WHERE ID_Sensor = ? AND Tipo_Sensor = ? AND Historico_Periodo = 'Semana'
+        GROUP BY YEAR(Data_Timestamp), WEEK(Data_Timestamp)
     `;
 
     banco.query(query, [id, type], (err, results) => {
@@ -220,18 +205,10 @@ app.get("/sensor-history/Mensal/:id", async (req, res) => {
 
     const query = `
         SELECT 
-            AVG(price) AS Resultado
-        FROM (
-            SELECT 
-                ID_Sensor, 
-                Tipo_Sensor,
-                YEAR(Data_Timestamp) AS Year, 
-                MONTH(Data_Timestamp) AS Month, 
-                SUM(Resultado_Atual) AS price
-            FROM Sensor_Logs
-            WHERE ID_Sensor = ? AND Tipo_Sensor = ?
-            GROUP BY Year, Month
-        ) AS monthly_sums
+            AVG(Resultado) AS Resultado
+        FROM Sensor_Historico
+        WHERE ID_Sensor = ? AND Tipo_Sensor = ? AND Historico_Periodo = 'Mes'
+        GROUP BY YEAR(Data_Timestamp), MONTH(Data_Timestamp)
     `;
 
     banco.query(query, [id, type], (err, results) => {
@@ -251,17 +228,10 @@ app.get("/sensor-history/Anual/:id", async (req, res) => {
 
     const query = `
         SELECT 
-            AVG(price) AS Resultado
-        FROM (
-            SELECT 
-                ID_Sensor, 
-                Tipo_Sensor,
-                YEAR(Data_Timestamp) AS Year, 
-                SUM(Resultado_Atual) AS price
-            FROM Sensor_Logs
-            WHERE ID_Sensor = ? AND Tipo_Sensor = ?
-            GROUP BY Year
-        ) AS yearly_sums
+            AVG(Resultado) AS Resultado
+        FROM Sensor_Historico
+        WHERE ID_Sensor = ? AND Tipo_Sensor = ? AND Historico_Periodo = 'Ano'
+        GROUP BY YEAR(Data_Timestamp)
     `;
 
     banco.query(query, [id, type], (err, results) => {
@@ -273,6 +243,7 @@ app.get("/sensor-history/Anual/:id", async (req, res) => {
         res.json(results);
     });
 });
+
 
 // Iniciar o servidor
 app.listen(port, () => {
